@@ -66,6 +66,17 @@ flutter build web --release --no-web-resources-cdn \
   --dart-define=SUPABASE_URL=... --dart-define=SUPABASE_ANON_KEY=...
 ```
 
+### MVP en ligne (GitHub Pages)
+
+Le workflow `.github/workflows/deploy-web.yml` compile, teste et publie la version web
+à chaque push sur `main` : `https://<compte>.github.io/MONAKO/`.
+
+1. *Settings › Secrets and variables › Actions › Variables* : créer `SUPABASE_URL` et
+   `SUPABASE_ANON_KEY` (clé *publishable* / *anon*, jamais `service_role`).
+2. *Settings › Pages › Build and deployment › Source* : **GitHub Actions**.
+3. Supabase › *Authentication › URL Configuration* : **Site URL** et **Redirect URLs** =
+   `https://<compte>.github.io/MONAKO/`.
+
 ### 4. Tests
 
 ```bash
