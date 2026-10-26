@@ -1,0 +1,553 @@
+{
+  "@@locale": "fr",
+  "ok": "OK",
+  "cancel": "Annuler",
+  "apply": "Appliquer",
+  "save": "Enregistrer",
+  "delete": "Supprimer",
+  "close": "Fermer",
+  "back": "Retour",
+  "next": "Suivant",
+  "add": "Ajouter",
+  "edit": "Modifier",
+  "rename": "Renommer",
+  "name": "Nom",
+  "keep": "Garder",
+  "or": "ou",
+  "selected": "Sélectionné",
+  "share": "Partager",
+  "settings": "Réglages",
+  "about": "À propos",
+  "language": "Langue",
+  "systemLanguage": "Langue du système",
+  "errorGeneric": "Une erreur est survenue : {error}",
+  "@errorGeneric": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "moreActions": "Plus d’actions",
+  "welcomeTitle": "Bienvenue dans Monako",
+  "welcomeBody": "Vos notes s’affichent dans les couleurs qui reposent vos yeux. Le fichier ne change jamais : chacun voit la même note dans ses propres couleurs.",
+  "medicalNoticeTitle": "Message important",
+  "medicalNotice": "Cet outil améliore le confort de lecture. Il ne remplace pas un examen de la vue et ne soigne aucune maladie.",
+  "medicalAdvice": "En cas de douleur ou de baisse de vision soudaine, consultez rapidement un professionnel de la vue (optométriste ou ophtalmologiste).",
+  "privacyNoticeTitle": "Votre vie privée",
+  "privacySummary": "Vos réglages d’affichage peuvent révéler un besoin de santé : ils restent privés dans votre compte, chiffrés, et ne sont jamais partagés avec de la publicité. On ne vous demande jamais le nom d’une maladie.",
+  "readPrivacyPolicy": "Lire la politique de confidentialité",
+  "consentLabel": "J’ai lu ces messages et j’accepte la politique de confidentialité.",
+  "stepOf": "Étape {current} sur {total}",
+  "@stepOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "q1Title": "La lumière blanche de l’écran vous gêne-t-elle ?",
+  "q1Hurts": "Oui, la lumière me fait mal ou m’éblouit",
+  "q1Sometimes": "Parfois, surtout le soir ou après un moment",
+  "q1Fine": "Non, la lumière ne me gêne pas",
+  "q2Title": "Qu’est-ce qui rend la lecture difficile ?",
+  "q2Help": "Cochez tout ce qui s’applique, ou rien.",
+  "symptomBlends": "Le texte se fond dans le fond",
+  "symptomColors": "Je confonds des couleurs",
+  "symptomBlurry": "Le texte est flou ou fait des halos",
+  "symptomField": "Je vois mal au centre ou sur les côtés",
+  "q3Title": "Quand étudiez-vous le plus ?",
+  "q3Day": "Le jour",
+  "q3Evening": "Le soir ou la nuit",
+  "q3Both": "Les deux",
+  "chooseTitle": "Quel affichage vous soulage ?",
+  "chooseHelp": "Lisez quelques secondes chaque exemple, puis gardez celui qui vous soulage le plus.",
+  "keepThisProfile": "Garder ce profil",
+  "changeLaterHint": "Vous pourrez changer de profil à tout moment, en moins de 2 secondes, avec la pastille profil.",
+  "needA": "Sensibilité à la lumière",
+  "needB": "Faible contraste",
+  "needC": "Couleurs",
+  "needD": "Vision réduite",
+  "needE": "Flou et distorsion",
+  "needNone": "Affichage standard",
+  "presetStandard": "Standard (noir sur blanc)",
+  "presetA1": "Lumière, sombre",
+  "presetA2": "Lumière, sépia doux",
+  "presetB": "Faible contraste",
+  "presetC": "Couleurs",
+  "presetD": "Vision réduite",
+  "presetE": "Flou et distorsion",
+  "profilesTitle": "Profils enregistrés",
+  "visualProfiles": "Profils visuels",
+  "presetProfiles": "Profils prédéfinis",
+  "myProfiles": "Mes profils",
+  "manageProfiles": "Gérer les profils",
+  "changeProfile": "Changer de profil",
+  "profilePillSemantics": "Profil d’affichage : {name}. Toucher pour changer.",
+  "@profilePillSemantics": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "linkProfileToNotebook": "Imposer ce profil à ce cahier",
+  "linkProfileToNotebookHelp": "Le cahier s’ouvrira toujours avec ce profil.",
+  "quickAdjust": "Réglages rapides",
+  "backgroundBrightness": "Luminosité du fond",
+  "contrast": "Contraste",
+  "textSizeValue": "Taille du texte : {size} pt",
+  "@textSizeValue": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "profileTiresMe": "Ce profil me fatigue",
+  "profileTiresMeHelp": "Proposer un réglage plus doux",
+  "softerPreviewText": "Voici un réglage plus doux (moins de contraste, teinte plus chaude). Le garder ?",
+  "softerName": "{name} (doux)",
+  "@softerName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "adjustedName": "{name} (ajusté)",
+  "@adjustedName": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rescueApplied": "Profil de secours rétabli : {name}",
+  "@rescueApplied": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rescueProfile": "Profil de secours",
+  "useRescueProfile": "Revenir au profil de secours (ou triple toucher)",
+  "rescueProfileHelp": "Rétabli par un triple toucher n’importe où, si un réglage rend la page illisible.",
+  "contrastOk": "dans la plage",
+  "contrastTooLow": "contraste trop faible",
+  "contrastTooHigh": "contraste trop élevé",
+  "contrastSemantics": "Contraste {ratio}, {status}",
+  "@contrastSemantics": {
+    "placeholders": {
+      "ratio": {
+        "type": "String"
+      },
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "combineNeeds": "Combiner des besoins",
+  "combineHelp": "Choisissez 2 profils ou plus (par exemple Lumière + Couleurs). Le fond vient du profil Lumière, les teintes du profil Couleurs.",
+  "combineCount": "Combiner ({count})",
+  "@combineCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fusionConflictTitle": "Réglages contradictoires",
+  "conflictCappedByLight": "Le besoin « faible contraste » demande plus de contraste que ce que tolère la sensibilité à la lumière. Le réglage le plus sûr pour vos yeux (plage de la lumière) est retenu.",
+  "conflictNoOverlap": "Ces besoins n’ont pas de plage de contraste commune. Le réglage le plus doux est retenu.",
+  "conflictBackground": "Un profil a un fond clair et l’autre un fond sombre. Le fond du profil Lumière (ou du premier) est retenu.",
+  "useSafest": "Utiliser le réglage le plus sûr",
+  "newProfile": "Nouveau profil",
+  "customizeCopy": "Personnaliser (copie)",
+  "exportProfile": "Exporter le profil (JSON)",
+  "exportForOptometrist": "Fiche pour l’optométriste (PDF)",
+  "importProfile": "Importer un profil",
+  "profileImported": "Profil importé : {name}",
+  "@profileImported": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileOptions": "Options du profil {name}",
+  "@profileOptions": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "profileSheetTitle": "Profil visuel Monako",
+  "needsLabel": "Besoins",
+  "contrastRangeLabel": "Plage de contraste",
+  "roleColumn": "Rôle",
+  "colorColumn": "Couleur",
+  "ratioColumn": "Contraste sur le fond",
+  "filtersLabel": "Filtres",
+  "strokeLabel": "Trait",
+  "profileSettings": "Réglages du profil",
+  "profileName": "Nom du profil",
+  "myProfile": "Mon profil",
+  "displayNeeds": "Besoins d’affichage",
+  "targetRange": "Contraste visé : {range}",
+  "@targetRange": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "rangeConflict": "Besoins contradictoires : la plage la plus sûre est retenue ({range}).",
+  "@rangeConflict": {
+    "placeholders": {
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "fixAutomatically": "Corriger automatiquement",
+  "fixAutomaticallyCount": "Corriger automatiquement ({count} hors plage)",
+  "@fixAutomaticallyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "outOfRangeTitle": "Contraste hors plage",
+  "outOfRangeText": "Ces couleurs sortent de la plage {range} : {roles}.",
+  "@outOfRangeText": {
+    "placeholders": {
+      "roles": {
+        "type": "String"
+      },
+      "range": {
+        "type": "String"
+      }
+    }
+  },
+  "saveAnyway": "Enregistrer quand même",
+  "previewEverywhere": "Aperçu dans toute l’app",
+  "colors": "Couleurs",
+  "filters": "Filtres",
+  "warmTint": "Teinte chaude",
+  "pdfBrightnessCap": "Plafond de luminosité des PDF",
+  "glareReduction": "Atténuation de l’éblouissement",
+  "haloReduction": "Halo réduit",
+  "textSettings": "Texte",
+  "fontSystem": "Système",
+  "fontLegible": "Lisible",
+  "fontDyslexic": "Dyslexie",
+  "lineHeightValue": "Interligne : {value}",
+  "@lineHeightValue": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "wordSpacing": "Espace entre les mots",
+  "defaultZoomValue": "Zoom par défaut : {value} %",
+  "@defaultZoomValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "strokeSettings": "Traits",
+  "strokeWidthValue": "Épaisseur du trait : {value} %",
+  "@strokeWidthValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "highlightOpacity": "Opacité des surlignages",
+  "rolePatterns": "Motifs en plus de la couleur",
+  "rolePatternsHelp": "Pointillés et tirets pour distinguer les encres sans la couleur.",
+  "simplifiedUi": "Interface simplifiée",
+  "roleHelp": "Chaque rôle est enregistré dans vos notes ; seule sa couleur change d’un profil à l’autre.",
+  "lightness": "Luminosité",
+  "saturation": "Saturation",
+  "hue": "Teinte",
+  "hexCode": "Code hexadécimal",
+  "sampleWord": "Exemple",
+  "rolePaper": "Fond de la page",
+  "rolePaperLine": "Lignes et quadrillage",
+  "roleInkPrimary": "Encre principale",
+  "roleInkSecondary": "Encre secondaire",
+  "roleAccent": "Encre d’accent {n}",
+  "@roleAccent": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "roleHighlight": "Surligneur {n}",
+  "@roleHighlight": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "roleHeading": "Titre",
+  "sampleHeading": "Chapitre 3 — La cellule",
+  "sampleBody1": "La membrane protège la cellule et contrôle ",
+  "sampleHighlighted": "ce qui entre et sort",
+  "sampleBody2": ". Le noyau contient l’ADN.",
+  "sampleAccent1": "À retenir",
+  "sampleAccent2": "Définition",
+  "sampleAccent3": "Exemple",
+  "sampleMargin": "Note en marge : relire pour l’examen.",
+  "samplePreviewSemantics": "Aperçu d’une note dans ce profil",
+  "searchHint": "Rechercher un cahier ou du texte",
+  "clearSearch": "Effacer la recherche",
+  "allNotebooks": "Tous",
+  "folderOptions": "Options du dossier",
+  "newNotebook": "Nouveau cahier",
+  "untitledNotebook": "Cahier sans titre",
+  "newFolder": "Nouveau dossier",
+  "importPdfOrImage": "Importer un PDF ou une image",
+  "emptyLibrary": "Créez votre premier cahier ou importez un cours en PDF.",
+  "noResults": "Aucun résultat.",
+  "deleteFolder": "Supprimer le dossier",
+  "deleteFolderHelp": "Les cahiers ne sont pas supprimés.",
+  "notebookOptions": "Options du cahier",
+  "moveToFolder": "Déplacer vers un dossier",
+  "noFolder": "Aucun dossier",
+  "coverColor": "Couleur de couverture",
+  "deleteNotebook": "Supprimer le cahier",
+  "deleteNotebookConfirm": "Supprimer « {title} » sur tous vos appareils ?",
+  "@deleteNotebookConfirm": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookSemantics": "Cahier {title}, {pages} pages, modifié le {date}",
+  "@notebookSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "pages": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "notebookMissing": "Ce cahier n’existe plus.",
+  "importing": "Import de {name}…",
+  "@importing": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "importDone": "{count, plural, =1{1 page importée} other{{count} pages importées}}",
+  "@importDone": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "importFailed": "Import impossible : {error}",
+  "@importFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "syncLocalOnly": "Mode local : sauvegarde sur cet appareil",
+  "syncSignedOut": "Non connecté : sauvegarde locale seulement",
+  "syncDone": "Synchronisé",
+  "syncRunning": "Synchronisation…",
+  "syncOffline": "Hors ligne : les changements seront envoyés plus tard",
+  "syncError": "Erreur de synchronisation : {error}",
+  "@syncError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "undo": "Annuler",
+  "redo": "Rétablir",
+  "toolPen": "Stylet",
+  "toolHighlighter": "Surligneur",
+  "toolText": "Texte",
+  "toolEraser": "Gomme",
+  "toolSelect": "Sélection",
+  "toolHand": "Déplacer la vue",
+  "widthFine": "Trait fin",
+  "widthMedium": "Trait moyen",
+  "widthThick": "Trait épais",
+  "selectHint": "Tracez un rectangle autour des éléments.",
+  "deleteSelection": "Supprimer la sélection",
+  "eraserHint": "Glissez sur un trait pour l’effacer.",
+  "handHint": "Glissez pour déplacer, pincez pour zoomer.",
+  "pageOf": "Page {current} / {total}",
+  "@pageOf": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "pageSemantics": "Page {current} sur {total}",
+  "@pageSemantics": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "previousPage": "Page précédente",
+  "nextPage": "Page suivante",
+  "addPage": "Ajouter une page",
+  "deletePage": "Supprimer la page",
+  "deletePageConfirm": "Supprimer cette page et ses annotations ?",
+  "pageTemplate": "Gabarit de page",
+  "templateBlank": "Blanc",
+  "templateLined": "Ligné",
+  "templateGrid": "Quadrillé",
+  "templateDotted": "Pointillé",
+  "exportNormal": "Exporter en PDF normal (noir sur blanc)",
+  "exportInProfile": "Exporter en PDF dans mon profil",
+  "shareNotebook": "Partager le cahier",
+  "readAloud": "Lire à voix haute",
+  "stopReading": "Arrêter la lecture",
+  "recognizeText": "Reconnaître le texte (OCR)",
+  "showRecognizedText": "Afficher le texte reconnu",
+  "showOriginal": "Voir l’original",
+  "documentFilter": "Filtre du document",
+  "importIntoNotebook": "Importer un PDF ou une image ici",
+  "assetUnavailable": "Fichier pas encore disponible sur cet appareil.",
+  "ocrRunning": "Reconnaissance du texte…",
+  "ocrFailed": "Texte illisible : la page garde le filtre de couleur seulement.",
+  "ocrDone": "Texte reconnu : il est maintenant recherchable et lisible à voix haute.",
+  "addText": "Ajouter du texte",
+  "editText": "Modifier le texte",
+  "textLabel": "Texte",
+  "dictate": "Dicter",
+  "stopDictation": "Arrêter la dictée",
+  "dictationUnavailable": "Dictée vocale indisponible sur cet appareil.",
+  "recolorMode": "Recoloration",
+  "recolorFull": "Complète",
+  "recolorBackground": "Fond seulement",
+  "recolorOff": "Désactivée",
+  "brightnessCapAuto": "Plafond de luminosité du profil",
+  "brightnessCapValue": "Plafond de luminosité : {value} %",
+  "@brightnessCapValue": {
+    "placeholders": {
+      "value": {
+        "type": "int"
+      }
+    }
+  },
+  "imagesTreatment": "Images et schémas",
+  "imagesIntact": "Intactes",
+  "imagesDimmed": "Atténuées",
+  "imagesRecolored": "Recolorées",
+  "textContrastAuto": "Contraste du texte automatique",
+  "originalNeverModified": "Le fichier original n’est jamais modifié : seul l’affichage change.",
+  "shareExplanation": "Votre camarade verra ce cahier dans ses propres couleurs. Votre profil visuel n’est jamais partagé.",
+  "email": "Courriel",
+  "permissionRead": "Lecture",
+  "permissionEdit": "Modification",
+  "removeAccess": "Retirer l’accès",
+  "shareUserNotFound": "Aucun compte Monako avec ce courriel.",
+  "account": "Compte",
+  "accountWhy": "Un compte synchronise vos notes et vos profils entre vos appareils. Sans compte, tout reste sur cet appareil.",
+  "signInWithApple": "Continuer avec Apple",
+  "password": "Mot de passe",
+  "passwordHelp": "Au moins 8 caractères.",
+  "signIn": "Se connecter",
+  "createAccount": "Créer un compte",
+  "haveAccount": "J’ai déjà un compte",
+  "noAccount": "Pas encore de compte ? Créer un compte",
+  "sendMagicLink": "Recevoir un lien de connexion",
+  "magicLinkSent": "Lien envoyé : ouvrez votre courriel sur cet appareil.",
+  "forgotPassword": "Mot de passe oublié",
+  "resetSent": "Courriel de réinitialisation envoyé.",
+  "checkEmailConfirm": "Vérifiez votre courriel pour confirmer votre compte.",
+  "continueWithoutAccount": "Continuer sans compte",
+  "signOut": "Se déconnecter",
+  "signOutHelp": "Vos notes restent dans votre compte et sont retirées de cet appareil.",
+  "neverSynced": "Jamais synchronisé",
+  "lastSynced": "Dernière synchronisation : {time}",
+  "@lastSynced": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "syncNow": "Synchroniser maintenant",
+  "localModeTitle": "Mode local",
+  "localModeHelp": "Cette version n’est pas reliée à un serveur : vos notes sont sauvegardées sur cet appareil.",
+  "exportMyData": "Exporter mes données",
+  "exportMyDataHelp": "Notes, profils et réglages dans un fichier JSON.",
+  "deleteAccount": "Supprimer mon compte",
+  "deleteAccountHelp": "Efface immédiatement vos notes, profils et fichiers.",
+  "deleteAccountConfirm": "Cette action efface définitivement toutes vos notes, vos profils et vos fichiers, sur tous vos appareils.",
+  "deleteWord": "SUPPRIMER",
+  "typeDelete": "Tapez SUPPRIMER pour confirmer",
+  "accountDeleted": "Compte supprimé.",
+  "redoComfortTest": "Refaire le test de confort",
+  "automaticModes": "Modes automatiques",
+  "autoNight": "Profil de nuit automatique",
+  "autoNightHelp": "De {start} h à {end} h",
+  "@autoNightHelp": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "end": {
+        "type": "int"
+      }
+    }
+  },
+  "nightProfile": "Profil de nuit",
+  "nightHours": "Heures de nuit",
+  "nightStart": "Début",
+  "nightEnd": "Fin",
+  "eveningWarmth": "Filtre chaud en fin de journée",
+  "eveningWarmthHelp": "La teinte se réchauffe progressivement de 18 h à 22 h.",
+  "pauseReminder": "Pauses visuelles 20-20-20",
+  "pauseReminderHelp": "Toutes les 20 minutes, un rappel discret.",
+  "pauseReminderText": "Pause visuelle : regardez au loin (6 m) pendant 20 secondes.",
+  "writing": "Écriture",
+  "fingerDrawing": "Écrire avec le doigt",
+  "fingerDrawingHelp": "Désactivé : seul le stylet écrit, le doigt fait défiler.",
+  "privacyPolicyTitle": "Politique de confidentialité",
+  "accessibilityTitle": "Déclaration d’accessibilité",
+  "privacyPolicyText": "Politique de confidentialité de Monako (langage simple)\n\n1. Ce que nous recueillons\n• Votre courriel, si vous créez un compte.\n• Vos notes (traits, textes, surlignages) et les PDF ou images que vous importez.\n• Vos profils visuels (couleurs, tailles, filtres) et vos réglages.\nNous ne vous demandons jamais le nom d’une maladie. Nous ne recueillons aucune donnée publicitaire et n’utilisons aucun outil de suivi.\n\n2. Pourquoi\nUniquement pour afficher vos notes dans vos couleurs et les synchroniser entre vos appareils.\n\n3. Données sensibles\nUn profil visuel peut révéler un besoin de santé. Il est donc :\n• stocké dans votre compte privé, accessible à vous seul (même quand vous partagez un cahier, votre profil n’est jamais partagé) ;\n• chiffré pendant le transfert (HTTPS) et au repos (serveur et appareil) ;\n• jamais vendu, jamais partagé avec de la publicité.\nLa reconnaissance de texte (OCR) se fait sur votre appareil.\n\n4. Hébergement\nLes données sont hébergées par Supabase (base de données Postgres, stockage de fichiers et authentification).\n\n5. Vos droits\n• Exporter toutes vos données (Réglages › Exporter mes données).\n• Supprimer votre compte : vos notes, profils et fichiers sont effacés immédiatement (au plus tard en 30 jours dans les sauvegardes).\n• Vous déconnecter : les données sont retirées de l’appareil.\n\n6. Élèves mineurs\nSi vous avez moins de 14 ans (Québec) ou si votre école l’exige, un parent ou tuteur doit consentir à la création du compte.\n\n7. Cadre légal\nLoi sur la protection des renseignements personnels et les documents électroniques (LPRPDE) et, au Québec, Loi 25. Pour toute question : contactez le responsable de la protection des renseignements personnels indiqué dans la fiche de l’app.",
+  "accessibilityText": "Déclaration d’accessibilité\n\nMonako vise la conformité aux Règles pour l’accessibilité des contenus Web (WCAG) 2.2, niveau AA, pour toute son interface.\n\nCe que l’app offre :\n• Toute l’interface est recolorée par votre profil : jamais de blanc ni de noir purs imposés.\n• Cibles tactiles d’au moins 44 pt / 48 dp.\n• Compatibilité VoiceOver (iOS) et TalkBack (Android) : chaque bouton a un nom.\n• Respect de la taille de texte du système.\n• Aucun clignotement ; fondus de 200 ms au maximum.\n• Aucune information portée par la couleur seule : chaque encre a un numéro, un motif ou une icône.\n• Interface en français et en anglais.\n• Geste de secours : un triple toucher rétablit un profil lisible.\n\nLimites connues :\n• Un PDF scanné de mauvaise qualité sans texte reconnu n’a que le filtre de couleur.\n• Les graphiques avec légendes colorées peuvent perdre en sens après recoloration : utilisez « Voir l’original ».\n\nSignaler un problème : écrivez-nous depuis la fiche de l’app. Nous répondons dans un délai de 10 jours ouvrables."
+}

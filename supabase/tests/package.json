@@ -1,0 +1,11 @@
+{
+  "name": "monako-schema-tests",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node validate_schema.mjs"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "0.2.17"
+  }
+}

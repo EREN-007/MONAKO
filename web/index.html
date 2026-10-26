@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Monako – des notes qui s’adaptent à la vue de chaque élève.">
+  <meta name="theme-color" content="#0D2A4A">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Monako">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Monako</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    /* Fond sombre neutre pendant le chargement: pas de flash blanc. */
+    html, body { background: #26272B; margin: 0; }
+  </style>
+</head>
+<body>
+  <!-- pdf.js embarqué (aucun CDN: confidentialité et hors ligne). -->
+  <script src="pdfjs/pdf.min.mjs" type="module"></script>
+  <script type="module">
+  var { pdfjsLib } = globalThis;
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdfjs/pdf.worker.min.mjs';
+
+  var pdfRenderOptions = {
+    cMapUrl: 'pdfjs/cmaps/',
+    cMapPacked: true,
+  }
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
