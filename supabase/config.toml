@@ -1,0 +1,51 @@
+# Configuration Supabase CLI (développement local: `supabase start`).
+project_id = "monako"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+
+[storage]
+enabled = true
+file_size_limit = "100MiB"
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+# Retour de connexion vers l'app (iOS / Android) et le web local.
+additional_redirect_urls = [
+  "com.monako.app://login-callback",
+  "http://localhost:3000",
+  "http://localhost:8080",
+]
+jwt_expiry = 3600
+enable_refresh_token_rotation = true
+enable_signup = true
+minimum_password_length = 8
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = true
+
+# Sign in with Apple: renseigner client_id et secret dans le tableau de bord
+# (Authentication > Providers > Apple) ou ici via des variables d'environnement.
+[auth.external.apple]
+enabled = false
+client_id = "env(SUPABASE_AUTH_APPLE_CLIENT_ID)"
+secret = "env(SUPABASE_AUTH_APPLE_SECRET)"
+redirect_uri = ""
