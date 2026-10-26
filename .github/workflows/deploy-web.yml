@@ -46,11 +46,17 @@ jobs:
         run: flutter test
 
       - name: Compiler la version web
+        env:
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
         run: |
+          # Retire espaces et retours à la ligne copiés par erreur avec les valeurs.
+          url="$(printf '%s' "$SUPABASE_URL" | tr -d '[:space:]')"
+          key="$(printf '%s' "$SUPABASE_ANON_KEY" | tr -d '[:space:]')"
           flutter build web --release --no-web-resources-cdn \
             --base-href "/${{ github.event.repository.name }}/" \
-            --dart-define=SUPABASE_URL=${{ vars.SUPABASE_URL }} \
-            --dart-define=SUPABASE_ANON_KEY=${{ vars.SUPABASE_ANON_KEY }}
+            --dart-define="SUPABASE_URL=$url" \
+            --dart-define="SUPABASE_ANON_KEY=$key"
           # Toute adresse inconnue renvoie vers l'app.
           cp build/web/index.html build/web/404.html
 
