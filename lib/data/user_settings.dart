@@ -20,6 +20,10 @@ class UserSettings {
     this.pauseReminder = false,
     this.fingerDrawing = true,
     this.scrollHorizontal = false,
+    this.homeProfileId,
+    this.quickProfileId,
+    this.showWelcome = true,
+    this.restoreHomeOnStart = true,
     this.modifiedAt,
   });
 
@@ -54,6 +58,20 @@ class UserSettings {
 
   /// Défilement des pages: vertical continu (par défaut) ou horizontal.
   final bool scrollHorizontal;
+
+  /// « Mon profil »: le profil de l'élève (test de confort ou calibrage).
+  /// Il reste prioritaire: l'élève peut essayer librement d'autres
+  /// affichages, puis y revenir d'un toucher; il est rétabli au démarrage.
+  final String? homeProfileId;
+
+  /// Profil « Personnalisé » modifié par les réglages rapides fond/encre.
+  final String? quickProfileId;
+
+  /// Page d'accueil affichée à chaque ouverture de l'app.
+  final bool showWelcome;
+
+  /// Revenir à « mon profil » à chaque ouverture.
+  final bool restoreHomeOnStart;
   final DateTime? modifiedAt;
 
   UserSettings copyWith({
@@ -72,6 +90,10 @@ class UserSettings {
     bool? pauseReminder,
     bool? fingerDrawing,
     bool? scrollHorizontal,
+    String? homeProfileId,
+    String? quickProfileId,
+    bool? showWelcome,
+    bool? restoreHomeOnStart,
   }) =>
       UserSettings(
         activeProfileId: activeProfileId ?? this.activeProfileId,
@@ -88,6 +110,10 @@ class UserSettings {
         pauseReminder: pauseReminder ?? this.pauseReminder,
         fingerDrawing: fingerDrawing ?? this.fingerDrawing,
         scrollHorizontal: scrollHorizontal ?? this.scrollHorizontal,
+        homeProfileId: homeProfileId ?? this.homeProfileId,
+        quickProfileId: quickProfileId ?? this.quickProfileId,
+        showWelcome: showWelcome ?? this.showWelcome,
+        restoreHomeOnStart: restoreHomeOnStart ?? this.restoreHomeOnStart,
         modifiedAt: nowUtc(),
       );
 
@@ -107,6 +133,10 @@ class UserSettings {
           'pauseReminder': pauseReminder,
           'fingerDrawing': fingerDrawing,
           'scrollHorizontal': scrollHorizontal,
+          'homeProfileId': homeProfileId,
+          'quickProfileId': quickProfileId,
+          'showWelcome': showWelcome,
+          'restoreHomeOnStart': restoreHomeOnStart,
         },
         'modified_at': timeToJson(modifiedAt ?? nowUtc()),
       };
@@ -128,6 +158,10 @@ class UserSettings {
       pauseReminder: p['pauseReminder'] == true,
       fingerDrawing: p['fingerDrawing'] != false,
       scrollHorizontal: p['scrollHorizontal'] == true,
+      homeProfileId: p['homeProfileId'] as String?,
+      quickProfileId: p['quickProfileId'] as String?,
+      showWelcome: p['showWelcome'] != false,
+      restoreHomeOnStart: p['restoreHomeOnStart'] != false,
       modifiedAt: r['modified_at'] == null ? null : parseTime(r['modified_at']),
     );
   }

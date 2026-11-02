@@ -176,12 +176,6 @@ abstract class AppLocalizations {
   /// **'ou'**
   String get or;
 
-  /// No description provided for @selected.
-  ///
-  /// In fr, this message translates to:
-  /// **'Sélectionné'**
-  String get selected;
-
   /// No description provided for @share.
   ///
   /// In fr, this message translates to:
@@ -469,12 +463,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Flou et distorsion'**
   String get presetE;
-
-  /// No description provided for @profilesTitle.
-  ///
-  /// In fr, this message translates to:
-  /// **'Profils enregistrés'**
-  String get profilesTitle;
 
   /// No description provided for @visualProfiles.
   ///
@@ -2545,6 +2533,138 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.'**
   String get calResultHelp;
+
+  /// No description provided for @myProfileTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil'**
+  String get myProfileTitle;
+
+  /// No description provided for @myProfileNamed.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil : {name}'**
+  String myProfileNamed(String name);
+
+  /// No description provided for @backToMyProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenir à mon profil'**
+  String get backToMyProfile;
+
+  /// No description provided for @inUse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Utilisé'**
+  String get inUse;
+
+  /// No description provided for @tryingProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vous essayez « {name} ». Votre profil reste enregistré.'**
+  String tryingProfile(String name);
+
+  /// No description provided for @makeItMyProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'En faire mon profil'**
+  String get makeItMyProfile;
+
+  /// No description provided for @tryAnotherLook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Essayer un autre affichage'**
+  String get tryAnotherLook;
+
+  /// No description provided for @tryAnotherLookHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Un toucher change tout l’affichage, en direct. Appui long : en faire mon profil.'**
+  String get tryAnotherLookHelp;
+
+  /// No description provided for @customizeLook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisir mon fond et mon encre'**
+  String get customizeLook;
+
+  /// No description provided for @customizeLookHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Choisissez librement : Monako ajuste la luminosité pour garder un contraste sûr.'**
+  String get customizeLookHelp;
+
+  /// No description provided for @background.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fond'**
+  String get background;
+
+  /// No description provided for @ink.
+  ///
+  /// In fr, this message translates to:
+  /// **'Encre'**
+  String get ink;
+
+  /// No description provided for @myCustomLook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon affichage personnalisé'**
+  String get myCustomLook;
+
+  /// No description provided for @welcomeBack.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon retour !'**
+  String get welcomeBack;
+
+  /// No description provided for @welcomeBackUser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bon retour, {email} !'**
+  String welcomeBackUser(String email);
+
+  /// No description provided for @welcomeTagline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vos notes, dans les couleurs qui reposent vos yeux.'**
+  String get welcomeTagline;
+
+  /// No description provided for @openMyNotes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ouvrir mes notes'**
+  String get openMyNotes;
+
+  /// No description provided for @resumeNotebook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Reprendre « {title} »'**
+  String resumeNotebook(String title);
+
+  /// No description provided for @signInToSync.
+  ///
+  /// In fr, this message translates to:
+  /// **'Se connecter pour synchroniser'**
+  String get signInToSync;
+
+  /// No description provided for @restoreHomeOnStart.
+  ///
+  /// In fr, this message translates to:
+  /// **'Revenir à mon profil à chaque ouverture'**
+  String get restoreHomeOnStart;
+
+  /// No description provided for @restoreHomeOnStartHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les essais d’autres affichages restent libres pendant la session.'**
+  String get restoreHomeOnStartHelp;
+
+  /// No description provided for @showWelcomeSetting.
+  ///
+  /// In fr, this message translates to:
+  /// **'Afficher la page d’accueil à l’ouverture'**
+  String get showWelcomeSetting;
 }
 
 class _AppLocalizationsDelegate

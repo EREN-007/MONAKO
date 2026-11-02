@@ -20,9 +20,37 @@
   <style>
     /* Fond sombre neutre pendant le chargement: pas de flash blanc. */
     html, body { background: #26272B; margin: 0; }
+    #splash {
+      position: fixed; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 18px;
+      color: #D9CFAF; font: 500 18px system-ui, -apple-system, sans-serif;
+      transition: opacity 200ms;
+    }
+    #splash img { width: 160px; height: 160px; border-radius: 50%; opacity: 0.92; }
+    #splash .bar { width: 160px; height: 4px; border-radius: 2px; background: #404043; overflow: hidden; }
+    #splash .bar::after {
+      content: ''; display: block; width: 40%; height: 100%; background: #E4C584;
+      animation: monako-load 1.4s ease-in-out infinite;
+    }
+    @keyframes monako-load { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+    @media (prefers-reduced-motion: reduce) { #splash .bar::after { animation: none; width: 100%; } }
   </style>
 </head>
 <body>
+  <!-- Écran de chargement: jamais de page vide pendant le démarrage. -->
+  <div id="splash" role="status" aria-live="polite">
+    <img src="splash-logo.png" alt="Monako">
+    <div>Monako</div>
+    <div class="bar"></div>
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', function () {
+      var s = document.getElementById('splash');
+      if (!s) return;
+      s.style.opacity = '0';
+      setTimeout(function () { s.remove(); }, 250);
+    });
+  </script>
   <!-- pdf.js embarqué (aucun CDN: confidentialité et hors ligne). -->
   <script src="pdfjs/pdf.min.mjs" type="module"></script>
   <script type="module">

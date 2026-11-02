@@ -20,6 +20,7 @@ class CalibrationAnswers {
     this.wordSpacing = 0,
     this.font = ProfileFont.system,
     this.warmTint = 0,
+    this.ink,
   });
 
   /// Fond choisi.
@@ -38,6 +39,10 @@ class CalibrationAnswers {
   final ProfileFont font;
   final double warmTint;
 
+  /// Teinte d'encre choisie (null = crème sur fond sombre, brun sur clair).
+  /// Sa luminosité est recalculée pour respecter le contraste.
+  final Oklch? ink;
+
   bool get darkPaper => paper.l < 0.55;
 
   CalibrationAnswers copyWith({
@@ -49,6 +54,7 @@ class CalibrationAnswers {
     double? wordSpacing,
     ProfileFont? font,
     double? warmTint,
+    Oklch? ink,
   }) =>
       CalibrationAnswers(
         paper: paper ?? this.paper,
@@ -59,6 +65,7 @@ class CalibrationAnswers {
         wordSpacing: wordSpacing ?? this.wordSpacing,
         font: font ?? this.font,
         warmTint: warmTint ?? this.warmTint,
+        ink: ink ?? this.ink,
       );
 
   /// Besoins déduits des choix (section 2), sans diagnostic.
@@ -105,7 +112,9 @@ VisualProfile buildCalibratedProfile(
 
   Color solve(Oklch hue, double t) => solveForContrast(paper, hue, t);
 
-  final ink = solve(dark ? const Oklch(0.85, 0.045, 90) : const Oklch(0.3, 0.02, 70), target);
+  final ink = solve(
+      a.ink ?? (dark ? const Oklch(0.85, 0.045, 90) : const Oklch(0.3, 0.02, 70)),
+      target);
   final inkO = Oklch.fromColor(ink);
   final roles = <InkRole, Color>{
     InkRole.paper: paper,
