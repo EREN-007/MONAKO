@@ -16,11 +16,35 @@ String newId() => _uuid.v4();
 
 /// Contenu d'une page chargé en mémoire.
 class PageContent {
-  PageContent(this.page, this.strokes, this.highlights, this.texts);
+  PageContent(this.page, this.strokes, this.highlights, this.texts,
+      [List<PageImage>? images])
+      : images = images ?? [];
   final NotePage page;
   final List<InkStroke> strokes;
   final List<InkStroke> highlights;
   final List<TextBlock> texts;
+  final List<PageImage> images;
+
+  Iterable<PageElement> get elements =>
+      [...images, ...highlights, ...strokes, ...texts];
+
+  PageContent withPage(NotePage p) =>
+      PageContent(p, strokes, highlights, texts, images);
+}
+
+/// Où insérer une nouvelle page.
+enum PageInsert { before, after, last }
+
+/// Taille de page.
+enum PageFormat {
+  portrait(800, 1131),
+  landscape(1131, 800),
+
+  /// Tableau blanc: grande surface.
+  whiteboard(2400, 1800);
+
+  const PageFormat(this.width, this.height);
+  final double width, height;
 }
 
 /// Résultat de recherche (titres, texte tapé, OCR).
@@ -213,20 +237,60 @@ class NotesRepository extends ChangeNotifier {
   List<Folder> get folders =>
       _folders.values.toList()..sort((a, b) => a.name.compareTo(b.name));
 
+  /// Cahiers actifs (hors corbeille). [folderId] null = tous.
   List<Notebook> notebooksIn(String? folderId) => _notebooks.values
-      .where((n) => folderId == null || n.folderId == folderId)
+      .where((n) => !n.trashed && (folderId == null || n.folderId == folderId))
       .toList()
     ..sort((a, b) => b.modifiedAt.compareTo(a.modifiedAt));
 
   List<Notebook> get allNotebooks => notebooksIn(null);
+
+  /// Cahiers à la racine (sans dossier).
+  List<Notebook> get rootNotebooks =>
+      allNotebooks.where((n) => n.folderId == null || !_folders.containsKey(n.folderId)).toList();
+
+  List<Notebook> get favoriteNotebooks =>
+      allNotebooks.where((n) => n.favorite).toList();
+
+  List<Notebook> get sharedNotebooks => allNotebooks.where(isShared).toList();
+
+  List<Notebook> get trashedNotebooks => _notebooks.values
+      .where((n) => n.trashed)
+      .toList()
+    ..sort((a, b) => b.trashedAt!.compareTo(a.trashedAt!));
+
+  List<Folder> foldersIn(String? parentId) =>
+      folders.where((f) => f.parentId == parentId).toList();
+
+  Future<void> toggleFavorite(Notebook n) =>
+      updateNotebook(n.copyWith(favorite: !n.favorite));
+
+  /// Corbeille: restaurable; vidée définitivement après 30 jours.
+  Future<void> moveToTrash(Notebook n) =>
+      updateNotebook(n.copyWith(trashedAt: nowUtc()));
+
+  Future<void> restoreFromTrash(Notebook n) =>
+      updateNotebook(n.copyWith(restore: true));
+
+  Future<void> emptyTrash({Duration olderThan = Duration.zero}) async {
+    final limit = nowUtc().subtract(olderThan);
+    for (final n in trashedNotebooks) {
+      if (!n.trashedAt!.isAfter(limit)) {
+        await _saveNotebook(n.copyWith(deleted: true));
+      }
+    }
+    notifyListeners();
+    scheduleSync();
+  }
 
   Notebook? notebook(String id) => _notebooks[id];
 
   bool isShared(Notebook n) =>
       n.userId != null && sync.currentUserId != null && n.userId != sync.currentUserId;
 
-  Future<Folder> createFolder(String name) async {
-    final f = Folder(id: newId(), name: name, userId: sync.currentUserId);
+  Future<Folder> createFolder(String name, {String? parentId}) async {
+    final f = Folder(
+        id: newId(), name: name, parentId: parentId, userId: sync.currentUserId);
     _folders[f.id] = f;
     await store.put(Tables.folders, f.toRow());
     notifyListeners();
@@ -261,16 +325,26 @@ class NotesRepository extends ChangeNotifier {
     await store.put(Tables.notebooks, n.toRow());
   }
 
-  Future<Notebook> createNotebook(String title,
-      {String? folderId, PageTemplate template = PageTemplate.lined}) async {
+  Future<Notebook> createNotebook(
+    String title, {
+    String? folderId,
+    PageTemplate template = PageTemplate.lined,
+    NotebookKind kind = NotebookKind.notebook,
+    PageFormat format = PageFormat.portrait,
+    String coverRole = 'ink.accent2',
+  }) async {
     final n = Notebook(
       id: newId(),
       title: title,
       folderId: folderId,
+      kind: kind,
+      coverRole: coverRole,
       userId: sync.currentUserId,
     );
     await _saveNotebook(n);
-    await addPage(n.id, template: template);
+    await addPage(n.id,
+        template: kind == NotebookKind.whiteboard ? PageTemplate.dotted : template,
+        format: kind == NotebookKind.whiteboard ? PageFormat.whiteboard : format);
     notifyListeners();
     scheduleSync();
     return n;
@@ -302,24 +376,41 @@ class NotesRepository extends ChangeNotifier {
 
   NotePage? page(String id) => _pages[id];
 
-  Future<NotePage> addPage(String notebookId,
-      {PageTemplate template = PageTemplate.lined, NotePage? after}) async {
+  /// Position d'une nouvelle page par rapport à [ref].
+  double _positionFor(String notebookId, NotePage? ref, PageInsert where) {
     final pages = pagesOf(notebookId);
-    double pos;
-    if (after == null || pages.isEmpty) {
-      pos = pages.isEmpty ? 1 : pages.last.position + 1;
-    } else {
-      final i = pages.indexWhere((p) => p.id == after.id);
-      pos = i == pages.length - 1
-          ? after.position + 1
-          : (after.position + pages[i + 1].position) / 2;
+    if (pages.isEmpty) return 1;
+    if (ref == null || where == PageInsert.last) return pages.last.position + 1;
+    final i = pages.indexWhere((p) => p.id == ref.id);
+    if (i < 0) return pages.last.position + 1;
+    if (where == PageInsert.before) {
+      return i == 0 ? ref.position - 1 : (ref.position + pages[i - 1].position) / 2;
     }
+    return i == pages.length - 1
+        ? ref.position + 1
+        : (ref.position + pages[i + 1].position) / 2;
+  }
+
+  Future<NotePage> addPage(
+    String notebookId, {
+    PageTemplate template = PageTemplate.lined,
+    NotePage? after,
+    PageInsert where = PageInsert.after,
+    PageFormat? format,
+  }) async {
+    final ref = after;
+    final size = format ??
+        (ref != null && ref.assetId == null
+            ? (ref.width > ref.height ? PageFormat.landscape : PageFormat.portrait)
+            : PageFormat.portrait);
     final p = NotePage(
       id: newId(),
       notebookId: notebookId,
       userId: sync.currentUserId,
       template: template,
-      position: pos,
+      position: _positionFor(notebookId, ref, ref == null ? PageInsert.last : where),
+      width: ref != null && ref.assetId == null && format == null ? ref.width : size.width,
+      height: ref != null && ref.assetId == null && format == null ? ref.height : size.height,
     );
     _pages[p.id] = p;
     await store.put(Tables.pages, p.toRow());
@@ -339,6 +430,58 @@ class NotesRepository extends ChangeNotifier {
     scheduleSync();
   }
 
+  /// Duplique une page et tout son contenu (nouveaux identifiants).
+  Future<NotePage> duplicatePage(NotePage page) async {
+    final content = await loadPage(page);
+    final copy = NotePage(
+      id: newId(),
+      notebookId: page.notebookId,
+      userId: sync.currentUserId,
+      template: page.template,
+      position: _positionFor(page.notebookId, page, PageInsert.after),
+      width: page.width,
+      height: page.height,
+      assetId: page.assetId,
+      assetPage: page.assetPage,
+      ocrText: page.ocrText,
+    );
+    _pages[copy.id] = copy;
+    await store.put(Tables.pages, copy.toRow());
+    await saveElements([
+      for (final e in content.elements)
+        switch (e) {
+          InkStroke s => s.copyWith(id: newId(), pageId: copy.id),
+          TextBlock t => t.copyWith(id: newId(), pageId: copy.id),
+          PageImage i => i.copyWith(id: newId(), pageId: copy.id),
+        },
+    ]);
+    notifyListeners();
+    return copy;
+  }
+
+  /// Efface tout le contenu d'une page (le gabarit et le PDF restent).
+  Future<void> clearPage(NotePage page) async {
+    final content = await loadPage(page);
+    await saveElements(content.elements.map((e) => e.markDeleted()));
+  }
+
+  /// Déplace une page à l'index [newIndex] (glisser-déposer des vignettes).
+  Future<void> movePage(NotePage page, int newIndex) async {
+    final pages = pagesOf(page.notebookId)..removeWhere((p) => p.id == page.id);
+    final i = newIndex.clamp(0, pages.length);
+    final double pos;
+    if (pages.isEmpty) {
+      pos = 1;
+    } else if (i == 0) {
+      pos = pages.first.position - 1;
+    } else if (i == pages.length) {
+      pos = pages.last.position + 1;
+    } else {
+      pos = (pages[i - 1].position + pages[i].position) / 2;
+    }
+    await updatePage(page.copyWith(position: pos));
+  }
+
   Future<PageContent> loadPage(NotePage page) async {
     final strokes = (await store.pageRows(Tables.strokes, page.id))
         .map((r) => InkStroke.fromRow(r, highlight: false))
@@ -354,7 +497,12 @@ class NotesRepository extends ChangeNotifier {
         .map(TextBlock.fromRow)
         .where((t) => !t.deleted)
         .toList();
-    return PageContent(page, strokes, highlights, texts);
+    final images = (await store.pageRows(Tables.pageImages, page.id))
+        .map(PageImage.fromRow)
+        .where((i) => !i.deleted)
+        .toList()
+      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    return PageContent(page, strokes, highlights, texts, images);
   }
 
   /// Enregistre des éléments (ajout, modification ou pierre tombale).
@@ -365,6 +513,7 @@ class NotesRepository extends ChangeNotifier {
       final table = switch (e) {
         InkStroke s => s.table,
         TextBlock _ => Tables.textBlocks,
+        PageImage _ => Tables.pageImages,
       };
       final row = e.toRow();
       row['user_id'] ??= uid;
@@ -398,6 +547,8 @@ class NotesRepository extends ChangeNotifier {
     required List<Size2> pageSizes,
     Notebook? into,
     String? folderId,
+    NotePage? at,
+    PageInsert where = PageInsert.last,
   }) async {
     final nb = into ??
         Notebook(
@@ -418,7 +569,15 @@ class NotesRepository extends ChangeNotifier {
     await store.putAssetBytes(a.id, bytes);
     _assets[a.id] = a;
     await store.put(Tables.assets, a.toRow());
-    var pos = pagesOf(nb.id).fold<double>(0, (m, p) => p.position > m ? p.position : m);
+    // Les pages importées s'insèrent entre [start] et [end].
+    final start = into == null ? 0.0 : _positionFor(nb.id, at, where);
+    final pages = pagesOf(nb.id);
+    final next = at == null || where == PageInsert.last
+        ? null
+        : pages.where((p) => p.position > start).firstOrNull;
+    final end = next?.position ?? start + pageSizes.length + 1;
+    final step = (end - start) / (pageSizes.length + 1);
+    var pos = into == null ? 0.0 : start - step;
     for (var i = 0; i < pageSizes.length; i++) {
       final s = pageSizes[i];
       const w = 800.0;
@@ -428,7 +587,7 @@ class NotesRepository extends ChangeNotifier {
         notebookId: nb.id,
         userId: sync.currentUserId,
         template: PageTemplate.blank,
-        position: ++pos,
+        position: into == null ? ++pos : (pos += step),
         width: w,
         height: h,
         assetId: a.id,
@@ -440,6 +599,24 @@ class NotesRepository extends ChangeNotifier {
     notifyListeners();
     scheduleSync();
     return nb;
+  }
+
+  /// Enregistre une image pour la poser sur une page.
+  Future<ImportedAsset> createImageAsset(
+      String notebookId, Uint8List bytes, String fileName) async {
+    final a = ImportedAsset(
+      id: newId(),
+      notebookId: notebookId,
+      userId: sync.currentUserId,
+      kind: AssetKind.image,
+      fileName: fileName,
+      filter: const RecolorSettings(mode: RecolorMode.off),
+    );
+    await store.putAssetBytes(a.id, bytes);
+    _assets[a.id] = a;
+    await store.put(Tables.assets, a.toRow());
+    scheduleSync();
+    return a;
   }
 
   final Map<String, Future<Uint8List?>> _downloads = {};
@@ -480,7 +657,7 @@ class NotesRepository extends ChangeNotifier {
       if (i < 0) continue;
       final n = _notebooks[r['notebook_id']];
       final p = _pages[r['page_id']];
-      if (n == null || p == null) continue;
+      if (n == null || p == null || n.trashed) continue;
       hits.add(SearchHit(n, page: p, snippet: _snippet(text, i, q.length)));
     }
     for (final p in _pages.values) {

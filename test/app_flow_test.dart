@@ -15,6 +15,7 @@ import 'package:monako/data/local_store.dart';
 import 'package:monako/data/user_settings.dart';
 import 'package:monako/ui/editor/editor_screen.dart';
 import 'package:monako/ui/library/library_screen.dart';
+import 'package:monako/ui/widgets/profile_pill.dart';
 
 void main() {
   setUpAll(() {
@@ -66,9 +67,10 @@ void main() {
     expect(settings['consent_at'], isNotNull);
 
     // 4. Nouveau cahier.
-    await tester.tap(find.text('Nouveau cahier').first);
+    await tester.tap(find.widgetWithText(OutlinedButton, 'Cahier'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('OK'));
+    expect(find.text('Nouveau cahier'), findsOneWidget);
+    await tester.tap(find.text('Créer'));
     await tester.pumpAndSettle();
     expect(find.byType(EditorScreen), findsOneWidget);
     await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 50)));
@@ -113,7 +115,8 @@ void main() {
     final saved = jsonEncode(rows);
 
     // 6. Changement de profil via la pastille: le fichier ne change pas.
-    await tester.tap(find.bySemanticsLabel(RegExp('Profil d’affichage')));
+    expect(find.bySemanticsLabel(RegExp('Profil d’affichage')), findsOneWidget);
+    await tester.tap(find.byType(ProfilePill));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Faible contraste').first);
     await tester.pumpAndSettle();

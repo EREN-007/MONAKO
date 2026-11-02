@@ -34,8 +34,10 @@ supabase link --project-ref <votre-ref>
 supabase db push            # applique supabase/migrations/*.sql
 ```
 
-**Sans la CLI** : ouvrez *SQL Editor* dans le tableau de bord et exécutez le contenu de
-`supabase/migrations/20261025000000_monako_schema.sql`.
+**Sans la CLI** : ouvrez *SQL Editor* dans le tableau de bord et exécutez, **dans l'ordre et une
+seule fois chacun**, les fichiers de `supabase/migrations/` :
+1. `20261025000000_monako_schema.sql` (schéma de base)
+2. `20261102000000_monako_v2.sql` (favoris, corbeille, signets, plan, types de stylo, images sur page)
 
 Puis, dans le tableau de bord :
 
@@ -149,6 +151,13 @@ valider par un optométriste avant le lancement public.**
 | V3 | Partage de cahiers (lecture / modification) avec collaboration en temps réel | ✅ |
 | V3 | Pauses visuelles 20-20-20, filtre chaud progressif en soirée | ✅ |
 | V3 | Export du profil (JSON) et fiche PDF pour l'optométriste | ✅ |
+| v2 | Écriture fluide : rejet de la paume, pression adoucie, couches séparées | ✅ |
+| v2 | Pages en défilement continu (vertical ou horizontal), onglets de documents | ✅ |
+| v2 | Panneau des pages : vignettes réordonnables, plan, signets ; recherche dans le document | ✅ |
+| v2 | Ajouter une page avant/après/à la fin, gabarits (ligné, étroit, quadrillé, pointillé, Cornell), portrait/paysage | ✅ |
+| v2 | Stylos plume/bille/pinceau, formes (et « dessiner puis maintenir »), gomme précise, lasso (déplacer, redimensionner, copier/coller), laser, images | ✅ |
+| v2 | Bibliothèque : favoris, partagés, corbeille (30 jours), tableau blanc, note rapide, dossiers imbriqués | ✅ |
+| v2 | **Test guidé « Calibrer ma vue »** : profil sur mesure calculé à partir de comparaisons | ✅ |
 
 ## Synchronisation (Supabase)
 

@@ -12,7 +12,12 @@ class AuthService extends ChangeNotifier {
   AuthService(this._client, this._store, this._repo) {
     final client = _client;
     if (client != null) {
-      _sub = client.auth.onAuthStateChange.listen(_onAuth);
+      _sub = client.auth.onAuthStateChange.listen(
+        _onAuth,
+        // Lien expiré ou ouvert dans un autre navigateur: on garde l'app
+        // utilisable, l'élève peut se connecter avec son mot de passe.
+        onError: (Object e) => debugPrint('Retour de connexion: $e'),
+      );
       final u = client.auth.currentUser;
       if (u != null) unawaited(_onSignedIn(u));
     }
@@ -31,7 +36,13 @@ class AuthService extends ChangeNotifier {
   User? get user => _client?.auth.currentUser;
   bool get signedIn => user != null;
 
-  String? get _redirect => kIsWeb ? null : redirectUrl;
+  /// Adresse de retour des liens envoyés par courriel. Sur le web: la page
+  /// où l'app est publiée (ex. https://compte.github.io/MONAKO/), pour ne
+  /// pas dépendre de la « Site URL » de Supabase.
+  String get _redirect => kIsWeb ? webRedirectUrl(Uri.base) : redirectUrl;
+
+  @visibleForTesting
+  static String webRedirectUrl(Uri page) => '${page.origin}${page.path}';
 
   Future<void> _onAuth(AuthState s) async {
     switch (s.event) {

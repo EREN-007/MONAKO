@@ -146,12 +146,6 @@ abstract class AppLocalizations {
   /// **'Suivant'**
   String get next;
 
-  /// No description provided for @add.
-  ///
-  /// In fr, this message translates to:
-  /// **'Ajouter'**
-  String get add;
-
   /// No description provided for @edit.
   ///
   /// In fr, this message translates to:
@@ -1094,18 +1088,6 @@ abstract class AppLocalizations {
   /// **'Rechercher un cahier ou du texte'**
   String get searchHint;
 
-  /// No description provided for @clearSearch.
-  ///
-  /// In fr, this message translates to:
-  /// **'Effacer la recherche'**
-  String get clearSearch;
-
-  /// No description provided for @allNotebooks.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tous'**
-  String get allNotebooks;
-
   /// No description provided for @folderOptions.
   ///
   /// In fr, this message translates to:
@@ -1183,12 +1165,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Couleur de couverture'**
   String get coverColor;
-
-  /// No description provided for @deleteNotebook.
-  ///
-  /// In fr, this message translates to:
-  /// **'Supprimer le cahier'**
-  String get deleteNotebook;
 
   /// No description provided for @deleteNotebookConfirm.
   ///
@@ -1298,12 +1274,6 @@ abstract class AppLocalizations {
   /// **'Gomme'**
   String get toolEraser;
 
-  /// No description provided for @toolSelect.
-  ///
-  /// In fr, this message translates to:
-  /// **'Sélection'**
-  String get toolSelect;
-
   /// No description provided for @toolHand.
   ///
   /// In fr, this message translates to:
@@ -1328,23 +1298,11 @@ abstract class AppLocalizations {
   /// **'Trait épais'**
   String get widthThick;
 
-  /// No description provided for @selectHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tracez un rectangle autour des éléments.'**
-  String get selectHint;
-
   /// No description provided for @deleteSelection.
   ///
   /// In fr, this message translates to:
   /// **'Supprimer la sélection'**
   String get deleteSelection;
-
-  /// No description provided for @eraserHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Glissez sur un trait pour l’effacer.'**
-  String get eraserHint;
 
   /// No description provided for @handHint.
   ///
@@ -1357,24 +1315,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Page {current} / {total}'**
   String pageOf(int current, int total);
-
-  /// No description provided for @pageSemantics.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page {current} sur {total}'**
-  String pageSemantics(int current, int total);
-
-  /// No description provided for @previousPage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page précédente'**
-  String get previousPage;
-
-  /// No description provided for @nextPage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page suivante'**
-  String get nextPage;
 
   /// No description provided for @addPage.
   ///
@@ -1393,12 +1333,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Supprimer cette page et ses annotations ?'**
   String get deletePageConfirm;
-
-  /// No description provided for @pageTemplate.
-  ///
-  /// In fr, this message translates to:
-  /// **'Gabarit de page'**
-  String get pageTemplate;
 
   /// No description provided for @templateBlank.
   ///
@@ -1483,12 +1417,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Importer un PDF ou une image ici'**
   String get importIntoNotebook;
-
-  /// No description provided for @assetUnavailable.
-  ///
-  /// In fr, this message translates to:
-  /// **'Fichier pas encore disponible sur cet appareil.'**
-  String get assetUnavailable;
 
   /// No description provided for @ocrRunning.
   ///
@@ -1951,6 +1879,672 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Déclaration d’accessibilité\n\nMonako vise la conformité aux Règles pour l’accessibilité des contenus Web (WCAG) 2.2, niveau AA, pour toute son interface.\n\nCe que l’app offre :\n• Toute l’interface est recolorée par votre profil : jamais de blanc ni de noir purs imposés.\n• Cibles tactiles d’au moins 44 pt / 48 dp.\n• Compatibilité VoiceOver (iOS) et TalkBack (Android) : chaque bouton a un nom.\n• Respect de la taille de texte du système.\n• Aucun clignotement ; fondus de 200 ms au maximum.\n• Aucune information portée par la couleur seule : chaque encre a un numéro, un motif ou une icône.\n• Interface en français et en anglais.\n• Geste de secours : un triple toucher rétablit un profil lisible.\n\nLimites connues :\n• Un PDF scanné de mauvaise qualité sans texte reconnu n’a que le filtre de couleur.\n• Les graphiques avec légendes colorées peuvent perdre en sens après recoloration : utilisez « Voir l’original ».\n\nSignaler un problème : écrivez-nous depuis la fiche de l’app. Nous répondons dans un délai de 10 jours ouvrables.'**
   String get accessibilityText;
+
+  /// No description provided for @library.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque'**
+  String get library;
+
+  /// No description provided for @pagesPanel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Panneau des pages'**
+  String get pagesPanel;
+
+  /// No description provided for @pages.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pages'**
+  String get pages;
+
+  /// No description provided for @outline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan'**
+  String get outline;
+
+  /// No description provided for @bookmarks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signets'**
+  String get bookmarks;
+
+  /// No description provided for @outlineEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune page dans le plan. Menu d’une page › « Ajouter au plan ».'**
+  String get outlineEmpty;
+
+  /// No description provided for @bookmarksEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun signet. Menu d’une page › « Ajouter aux signets ».'**
+  String get bookmarksEmpty;
+
+  /// No description provided for @pageMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Menu de la page'**
+  String get pageMenu;
+
+  /// No description provided for @pageNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Page {n}'**
+  String pageNumber(int n);
+
+  /// No description provided for @searchInDocument.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher dans le document'**
+  String get searchInDocument;
+
+  /// No description provided for @shareAndExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager et exporter'**
+  String get shareAndExport;
+
+  /// No description provided for @closeTab.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer l’onglet'**
+  String get closeTab;
+
+  /// No description provided for @copy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get copy;
+
+  /// No description provided for @cut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couper'**
+  String get cut;
+
+  /// No description provided for @paste.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coller'**
+  String get paste;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer'**
+  String get duplicate;
+
+  /// No description provided for @changeInk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer l’encre'**
+  String get changeInk;
+
+  /// No description provided for @toolLasso.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lasso'**
+  String get toolLasso;
+
+  /// No description provided for @toolShapes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formes'**
+  String get toolShapes;
+
+  /// No description provided for @toolLaser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pointeur laser'**
+  String get toolLaser;
+
+  /// No description provided for @insertImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Insérer une image'**
+  String get insertImage;
+
+  /// No description provided for @penBall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bille'**
+  String get penBall;
+
+  /// No description provided for @penFountain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plume'**
+  String get penFountain;
+
+  /// No description provided for @penBrush.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pinceau'**
+  String get penBrush;
+
+  /// No description provided for @penType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de stylo : {name}'**
+  String penType(String name);
+
+  /// No description provided for @holdToShape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Astuce : dessinez puis maintenez pour une forme parfaite.'**
+  String get holdToShape;
+
+  /// No description provided for @shapesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dessinez une ligne, un rectangle, un cercle ou un triangle.'**
+  String get shapesHint;
+
+  /// No description provided for @textHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez la page pour écrire du texte.'**
+  String get textHint;
+
+  /// No description provided for @eraseStroke.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trait entier'**
+  String get eraseStroke;
+
+  /// No description provided for @erasePrecise.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précise'**
+  String get erasePrecise;
+
+  /// No description provided for @eraseHighlightsOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surlignages seulement'**
+  String get eraseHighlightsOnly;
+
+  /// No description provided for @lassoHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entourez des éléments pour les déplacer, redimensionner ou copier.'**
+  String get lassoHint;
+
+  /// No description provided for @laserHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montrez sans écrire : la trace s’efface d’elle-même.'**
+  String get laserHint;
+
+  /// No description provided for @addBookmark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux signets'**
+  String get addBookmark;
+
+  /// No description provided for @removeBookmark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des signets'**
+  String get removeBookmark;
+
+  /// No description provided for @addToOutline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au plan'**
+  String get addToOutline;
+
+  /// No description provided for @renameInOutline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer dans le plan'**
+  String get renameInOutline;
+
+  /// No description provided for @outlineTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre dans le plan'**
+  String get outlineTitle;
+
+  /// No description provided for @duplicatePage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer la page'**
+  String get duplicatePage;
+
+  /// No description provided for @changeTemplate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer le gabarit'**
+  String get changeTemplate;
+
+  /// No description provided for @goToPage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aller à la page'**
+  String get goToPage;
+
+  /// No description provided for @scrollHorizontal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Défilement horizontal'**
+  String get scrollHorizontal;
+
+  /// No description provided for @clearPage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer la page'**
+  String get clearPage;
+
+  /// No description provided for @clearPageConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer tout ce qui est écrit sur cette page ? (Annuler reste possible.)'**
+  String get clearPageConfirm;
+
+  /// No description provided for @insertBefore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant'**
+  String get insertBefore;
+
+  /// No description provided for @insertAfter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après'**
+  String get insertAfter;
+
+  /// No description provided for @insertLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'À la fin'**
+  String get insertLast;
+
+  /// No description provided for @portrait.
+  ///
+  /// In fr, this message translates to:
+  /// **'Portrait'**
+  String get portrait;
+
+  /// No description provided for @landscape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paysage'**
+  String get landscape;
+
+  /// No description provided for @templates.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gabarits'**
+  String get templates;
+
+  /// No description provided for @templateNarrow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ligné étroit'**
+  String get templateNarrow;
+
+  /// No description provided for @templateCornell.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cornell'**
+  String get templateCornell;
+
+  /// No description provided for @imagePage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Page à partir d’une image'**
+  String get imagePage;
+
+  /// No description provided for @documents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Documents'**
+  String get documents;
+
+  /// No description provided for @favorites.
+  ///
+  /// In fr, this message translates to:
+  /// **'Favoris'**
+  String get favorites;
+
+  /// No description provided for @sharedWithMe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partagés avec moi'**
+  String get sharedWithMe;
+
+  /// No description provided for @trash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Corbeille'**
+  String get trash;
+
+  /// No description provided for @importShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer'**
+  String get importShort;
+
+  /// No description provided for @notebook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cahier'**
+  String get notebook;
+
+  /// No description provided for @whiteboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau blanc'**
+  String get whiteboard;
+
+  /// No description provided for @quickNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note rapide'**
+  String get quickNote;
+
+  /// No description provided for @newItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau'**
+  String get newItem;
+
+  /// No description provided for @quickNoteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note rapide – {date}'**
+  String quickNoteTitle(String date);
+
+  /// No description provided for @sortBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier'**
+  String get sortBy;
+
+  /// No description provided for @sortRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récents'**
+  String get sortRecent;
+
+  /// No description provided for @sortName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get sortName;
+
+  /// No description provided for @gridView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue en grille'**
+  String get gridView;
+
+  /// No description provided for @listView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue en liste'**
+  String get listView;
+
+  /// No description provided for @emptyTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider la corbeille'**
+  String get emptyTrash;
+
+  /// No description provided for @emptyTrashConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement tous les cahiers de la corbeille ?'**
+  String get emptyTrashConfirm;
+
+  /// No description provided for @favoritesEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez l’étoile d’un cahier pour le retrouver ici.'**
+  String get favoritesEmpty;
+
+  /// No description provided for @sharedEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun cahier partagé avec vous pour l’instant.'**
+  String get sharedEmpty;
+
+  /// No description provided for @trashEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'La corbeille est vide. Les cahiers y restent 30 jours.'**
+  String get trashEmpty;
+
+  /// No description provided for @notebookCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Vide} =1{1 cahier} other{{count} cahiers}}'**
+  String notebookCount(int count);
+
+  /// No description provided for @create.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer'**
+  String get create;
+
+  /// No description provided for @addFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux favoris'**
+  String get addFavorite;
+
+  /// No description provided for @removeFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des favoris'**
+  String get removeFavorite;
+
+  /// No description provided for @moveToTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre à la corbeille'**
+  String get moveToTrash;
+
+  /// No description provided for @movedToTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » est dans la corbeille.'**
+  String movedToTrash(String title);
+
+  /// No description provided for @restore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer'**
+  String get restore;
+
+  /// No description provided for @deleteForever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement'**
+  String get deleteForever;
+
+  /// No description provided for @calibrateMyVision.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calibrer ma vue (test guidé)'**
+  String get calibrateMyVision;
+
+  /// No description provided for @calibrateMyVisionHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comparez des échantillons : Monako calcule un profil sur mesure.'**
+  String get calibrateMyVisionHelp;
+
+  /// No description provided for @calibrationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calibrer ma vue'**
+  String get calibrationTitle;
+
+  /// No description provided for @myCalibratedProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil sur mesure'**
+  String get myCalibratedProfile;
+
+  /// No description provided for @saveAndUse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer et utiliser'**
+  String get saveAndUse;
+
+  /// No description provided for @calibrationSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lisez cette phrase quelques secondes. Est-ce reposant ?'**
+  String get calibrationSample;
+
+  /// No description provided for @calBackgroundTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel fond repose le plus vos yeux ?'**
+  String get calBackgroundTitle;
+
+  /// No description provided for @calBackgroundHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Regardez chaque échantillon quelques secondes, puis touchez celui qui éblouit le moins.'**
+  String get calBackgroundHelp;
+
+  /// No description provided for @calContrastTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel contraste vous convient ?'**
+  String get calContrastTitle;
+
+  /// No description provided for @calContrastHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plus fort n’est pas toujours le meilleur : choisissez celui qui reste confortable longtemps.'**
+  String get calContrastHelp;
+
+  /// No description provided for @calSoft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Doux : texte calme, peu d’éblouissement.'**
+  String get calSoft;
+
+  /// No description provided for @calMedium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen : bon équilibre pour lire longtemps.'**
+  String get calMedium;
+
+  /// No description provided for @calStrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fort : les lettres ressortent nettement.'**
+  String get calStrong;
+
+  /// No description provided for @calVeryStrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très fort : contraste maximal sans blanc pur.'**
+  String get calVeryStrong;
+
+  /// No description provided for @calSizeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quelle taille lisez-vous sans effort ?'**
+  String get calSizeTitle;
+
+  /// No description provided for @calSizeHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez la plus petite ligne que vous lisez sans plisser les yeux. Monako ajoute une petite marge de confort.'**
+  String get calSizeHelp;
+
+  /// No description provided for @calSizeSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cellule est l’unité du vivant.'**
+  String get calSizeSample;
+
+  /// No description provided for @calColorsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces couleurs sont-elles bien différentes ?'**
+  String get calColorsTitle;
+
+  /// No description provided for @calColorsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Regardez les quatre bandes. Aucune bonne ou mauvaise réponse.'**
+  String get calColorsHelp;
+
+  /// No description provided for @calColorsDistinct.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui, je les distingue facilement'**
+  String get calColorsDistinct;
+
+  /// No description provided for @calColorsConfused.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas vraiment, certaines se ressemblent'**
+  String get calColorsConfused;
+
+  /// No description provided for @calSpacingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel espacement aide votre lecture ?'**
+  String get calSpacingTitle;
+
+  /// No description provided for @calSpacingHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d’espace entre les lignes et les mots réduit les halos et les lignes qui se chevauchent.'**
+  String get calSpacingHelp;
+
+  /// No description provided for @calSpacingSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les lignes et les mots ont plus ou moins d’espace entre eux. Lequel est le plus reposant ?'**
+  String get calSpacingSample;
+
+  /// No description provided for @calFontTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Police'**
+  String get calFontTitle;
+
+  /// No description provided for @calFontSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour ! Lisez ces quelques mots.'**
+  String get calFontSample;
+
+  /// No description provided for @calWarmthTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une teinte plus chaude ?'**
+  String get calWarmthTitle;
+
+  /// No description provided for @calWarmthHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réduire le bleu adoucit l’écran, surtout le soir. Glissez jusqu’à ce que ce soit confortable.'**
+  String get calWarmthHelp;
+
+  /// No description provided for @calResultTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre profil sur mesure'**
+  String get calResultTitle;
+
+  /// No description provided for @calResultHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.'**
+  String get calResultHelp;
 }
 
 class _AppLocalizationsDelegate

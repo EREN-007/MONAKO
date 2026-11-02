@@ -13,6 +13,7 @@ import '../../services/export_service.dart';
 import '../../services/profile_controller.dart';
 import '../widgets/profile_names.dart';
 import '../widgets/profile_pill.dart';
+import 'calibration_screen.dart';
 import 'profile_editor_screen.dart';
 
 /// Profils prédéfinis (besoins A à E) et profils personnels: appliquer,
@@ -157,6 +158,16 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
       appBar: AppBar(
         title: Text(l.visualProfiles),
         actions: [
+          IconButton(
+            tooltip: l.calibrateMyVision,
+            onPressed: () async {
+              final pc = context.read<ProfileController>();
+              final p = await Navigator.push<VisualProfile>(context,
+                  MaterialPageRoute(builder: (_) => const CalibrationScreen()));
+              if (p != null) await pc.setActive(p.id);
+            },
+            icon: const Icon(Icons.tune),
+          ),
           IconButton(
             tooltip: l.importProfile,
             onPressed: _import,

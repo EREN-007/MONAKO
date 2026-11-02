@@ -34,9 +34,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get next => 'Next';
 
   @override
-  String get add => 'Add';
-
-  @override
   String get edit => 'Edit';
 
   @override
@@ -564,12 +561,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search notebooks or text';
 
   @override
-  String get clearSearch => 'Clear search';
-
-  @override
-  String get allNotebooks => 'All';
-
-  @override
   String get folderOptions => 'Folder options';
 
   @override
@@ -608,9 +599,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coverColor => 'Cover colour';
-
-  @override
-  String get deleteNotebook => 'Delete notebook';
 
   @override
   String deleteNotebookConfirm(String title) {
@@ -685,9 +673,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolEraser => 'Eraser';
 
   @override
-  String get toolSelect => 'Select';
-
-  @override
   String get toolHand => 'Move view';
 
   @override
@@ -700,13 +685,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widthThick => 'Thick stroke';
 
   @override
-  String get selectHint => 'Draw a rectangle around items.';
-
-  @override
   String get deleteSelection => 'Delete selection';
-
-  @override
-  String get eraserHint => 'Drag over a stroke to erase it.';
 
   @override
   String get handHint => 'Drag to move, pinch to zoom.';
@@ -717,17 +696,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String pageSemantics(int current, int total) {
-    return 'Page $current of $total';
-  }
-
-  @override
-  String get previousPage => 'Previous page';
-
-  @override
-  String get nextPage => 'Next page';
-
-  @override
   String get addPage => 'Add page';
 
   @override
@@ -735,9 +703,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deletePageConfirm => 'Delete this page and its annotations?';
-
-  @override
-  String get pageTemplate => 'Page template';
 
   @override
   String get templateBlank => 'Blank';
@@ -780,9 +745,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importIntoNotebook => 'Import a PDF or image here';
-
-  @override
-  String get assetUnavailable => 'File not yet available on this device.';
 
   @override
   String get ocrRunning => 'Recognising text…';
@@ -1035,4 +997,369 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accessibilityText =>
       'Accessibility statement\n\nMonako aims to conform to the Web Content Accessibility Guidelines (WCAG) 2.2, level AA, across its interface.\n\nWhat the app offers:\n• The whole interface is recoloured by your profile: never forced pure white or pure black.\n• Touch targets of at least 44 pt / 48 dp.\n• VoiceOver (iOS) and TalkBack (Android) support: every button has a name.\n• Respects the system text size.\n• No flashing; fades of 200 ms at most.\n• No information conveyed by colour alone: each ink has a number, a pattern or an icon.\n• Interface in French and English.\n• Rescue gesture: a triple tap restores a readable profile.\n\nKnown limitations:\n• A poor-quality scanned PDF without recognised text only gets the colour filter.\n• Charts with colour legends may lose meaning after recolouring: use “See the original”.\n\nReport a problem: write to us from the app\'s store page. We reply within 10 business days.';
+
+  @override
+  String get library => 'Library';
+
+  @override
+  String get pagesPanel => 'Pages panel';
+
+  @override
+  String get pages => 'Pages';
+
+  @override
+  String get outline => 'Outline';
+
+  @override
+  String get bookmarks => 'Bookmarks';
+
+  @override
+  String get outlineEmpty =>
+      'No pages in the outline. Page menu › “Add to outline”.';
+
+  @override
+  String get bookmarksEmpty => 'No bookmarks. Page menu › “Add bookmark”.';
+
+  @override
+  String get pageMenu => 'Page menu';
+
+  @override
+  String pageNumber(int n) {
+    return 'Page $n';
+  }
+
+  @override
+  String get searchInDocument => 'Search in document';
+
+  @override
+  String get shareAndExport => 'Share and export';
+
+  @override
+  String get closeTab => 'Close tab';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get cut => 'Cut';
+
+  @override
+  String get paste => 'Paste';
+
+  @override
+  String get duplicate => 'Duplicate';
+
+  @override
+  String get changeInk => 'Change ink';
+
+  @override
+  String get toolLasso => 'Lasso';
+
+  @override
+  String get toolShapes => 'Shapes';
+
+  @override
+  String get toolLaser => 'Laser pointer';
+
+  @override
+  String get insertImage => 'Insert image';
+
+  @override
+  String get penBall => 'Ballpoint';
+
+  @override
+  String get penFountain => 'Fountain pen';
+
+  @override
+  String get penBrush => 'Brush';
+
+  @override
+  String penType(String name) {
+    return 'Pen type: $name';
+  }
+
+  @override
+  String get holdToShape => 'Tip: draw and hold for a perfect shape.';
+
+  @override
+  String get shapesHint => 'Draw a line, rectangle, circle or triangle.';
+
+  @override
+  String get textHint => 'Tap the page to type text.';
+
+  @override
+  String get eraseStroke => 'Whole stroke';
+
+  @override
+  String get erasePrecise => 'Precise';
+
+  @override
+  String get eraseHighlightsOnly => 'Highlights only';
+
+  @override
+  String get lassoHint => 'Circle items to move, resize or copy them.';
+
+  @override
+  String get laserHint => 'Point without writing: the trail fades away.';
+
+  @override
+  String get addBookmark => 'Add bookmark';
+
+  @override
+  String get removeBookmark => 'Remove bookmark';
+
+  @override
+  String get addToOutline => 'Add to outline';
+
+  @override
+  String get renameInOutline => 'Rename in outline';
+
+  @override
+  String get outlineTitle => 'Outline title';
+
+  @override
+  String get duplicatePage => 'Duplicate page';
+
+  @override
+  String get changeTemplate => 'Change template';
+
+  @override
+  String get goToPage => 'Go to page';
+
+  @override
+  String get scrollHorizontal => 'Horizontal scrolling';
+
+  @override
+  String get clearPage => 'Clear page';
+
+  @override
+  String get clearPageConfirm =>
+      'Erase everything written on this page? (You can still undo.)';
+
+  @override
+  String get insertBefore => 'Before';
+
+  @override
+  String get insertAfter => 'After';
+
+  @override
+  String get insertLast => 'Last page';
+
+  @override
+  String get portrait => 'Portrait';
+
+  @override
+  String get landscape => 'Landscape';
+
+  @override
+  String get templates => 'Templates';
+
+  @override
+  String get templateNarrow => 'Narrow ruled';
+
+  @override
+  String get templateCornell => 'Cornell';
+
+  @override
+  String get imagePage => 'Page from an image';
+
+  @override
+  String get documents => 'Documents';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get sharedWithMe => 'Shared with me';
+
+  @override
+  String get trash => 'Trash';
+
+  @override
+  String get importShort => 'Import';
+
+  @override
+  String get notebook => 'Notebook';
+
+  @override
+  String get whiteboard => 'Whiteboard';
+
+  @override
+  String get quickNote => 'Quick note';
+
+  @override
+  String get newItem => 'New';
+
+  @override
+  String quickNoteTitle(String date) {
+    return 'Quick note – $date';
+  }
+
+  @override
+  String get sortBy => 'Sort';
+
+  @override
+  String get sortRecent => 'Recent';
+
+  @override
+  String get sortName => 'Name';
+
+  @override
+  String get gridView => 'Grid view';
+
+  @override
+  String get listView => 'List view';
+
+  @override
+  String get emptyTrash => 'Empty trash';
+
+  @override
+  String get emptyTrashConfirm =>
+      'Permanently delete every notebook in the trash?';
+
+  @override
+  String get favoritesEmpty => 'Tap a notebook’s star to find it here.';
+
+  @override
+  String get sharedEmpty => 'No notebooks shared with you yet.';
+
+  @override
+  String get trashEmpty =>
+      'The trash is empty. Notebooks stay here for 30 days.';
+
+  @override
+  String notebookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notebooks',
+      one: '1 notebook',
+      zero: 'Empty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get addFavorite => 'Add to favorites';
+
+  @override
+  String get removeFavorite => 'Remove from favorites';
+
+  @override
+  String get moveToTrash => 'Move to trash';
+
+  @override
+  String movedToTrash(String title) {
+    return '“$title” moved to the trash.';
+  }
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get deleteForever => 'Delete forever';
+
+  @override
+  String get calibrateMyVision => 'Calibrate my vision (guided test)';
+
+  @override
+  String get calibrateMyVisionHelp =>
+      'Compare samples: Monako builds a tailored profile.';
+
+  @override
+  String get calibrationTitle => 'Calibrate my vision';
+
+  @override
+  String get myCalibratedProfile => 'My tailored profile';
+
+  @override
+  String get saveAndUse => 'Save and use';
+
+  @override
+  String get calibrationSample =>
+      'Read this sentence for a few seconds. Is it restful?';
+
+  @override
+  String get calBackgroundTitle => 'Which background is most restful?';
+
+  @override
+  String get calBackgroundHelp =>
+      'Look at each sample for a few seconds, then tap the one that dazzles you least.';
+
+  @override
+  String get calContrastTitle => 'Which contrast suits you?';
+
+  @override
+  String get calContrastHelp =>
+      'The strongest is not always the best: pick the one that stays comfortable for a long time.';
+
+  @override
+  String get calSoft => 'Soft: calm text, little glare.';
+
+  @override
+  String get calMedium => 'Medium: good balance for long reading.';
+
+  @override
+  String get calStrong => 'Strong: letters stand out clearly.';
+
+  @override
+  String get calVeryStrong =>
+      'Very strong: maximum contrast without pure white.';
+
+  @override
+  String get calSizeTitle => 'Which size can you read without effort?';
+
+  @override
+  String get calSizeHelp =>
+      'Tap the smallest line you can read without squinting. Monako adds a small comfort margin.';
+
+  @override
+  String get calSizeSample => 'The cell is the unit of life.';
+
+  @override
+  String get calColorsTitle => 'Are these colours clearly different?';
+
+  @override
+  String get calColorsHelp =>
+      'Look at the four bands. There is no right or wrong answer.';
+
+  @override
+  String get calColorsDistinct => 'Yes, I can tell them apart easily';
+
+  @override
+  String get calColorsConfused => 'Not really, some look alike';
+
+  @override
+  String get calSpacingTitle => 'Which spacing helps your reading?';
+
+  @override
+  String get calSpacingHelp =>
+      'More space between lines and words reduces halos and overlapping lines.';
+
+  @override
+  String get calSpacingSample =>
+      'Lines and words have more or less space between them. Which is most restful?';
+
+  @override
+  String get calFontTitle => 'Font';
+
+  @override
+  String get calFontSample => 'Hello! Read these few words.';
+
+  @override
+  String get calWarmthTitle => 'A warmer tint?';
+
+  @override
+  String get calWarmthHelp =>
+      'Reducing blue softens the screen, especially at night. Slide until it feels comfortable.';
+
+  @override
+  String get calResultTitle => 'Your tailored profile';
+
+  @override
+  String get calResultHelp =>
+      'Here is a note in this profile. You can adjust it at any time.';
 }

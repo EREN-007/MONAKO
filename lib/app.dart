@@ -14,6 +14,7 @@ import 'services/auth_service.dart';
 import 'services/ocr/ocr_service.dart';
 import 'services/profile_controller.dart';
 import 'services/speech_service.dart';
+import 'ui/editor/open_tabs.dart';
 import 'ui/library/library_screen.dart';
 import 'ui/onboarding/onboarding_screen.dart';
 import 'ui/theme.dart';
@@ -38,6 +39,7 @@ class _MonakoAppState extends State<MonakoApp> with WidgetsBindingObserver {
   late final AssetRenderer renderer = AssetRenderer(repo);
   final SpeechService speech = SpeechService();
   final OcrService ocr = OcrService();
+  final OpenTabs tabs = OpenTabs();
   Timer? _periodic;
 
   @override
@@ -76,6 +78,7 @@ class _MonakoAppState extends State<MonakoApp> with WidgetsBindingObserver {
         ChangeNotifierProvider.value(value: profiles),
         ChangeNotifierProvider.value(value: auth),
         ChangeNotifierProvider.value(value: speech),
+        ChangeNotifierProvider.value(value: tabs),
         Provider.value(value: renderer),
         Provider.value(value: ocr),
       ],

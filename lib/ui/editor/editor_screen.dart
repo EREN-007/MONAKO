@@ -1,17 +1,14 @@
-import 'dart:async';
 import 'dart:ui' as ui;
 
-import 'package:flutter/gestures.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:perfect_freehand/perfect_freehand.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/profiles/palette.dart';
 import '../../core/profiles/presets.dart';
 import '../../core/profiles/visual_profile.dart';
 import '../../core/render/page_painter.dart';
-import '../../core/render/stroke_geometry.dart';
 import '../../core/roles.dart';
 import '../../data/models.dart';
 import '../../data/repository.dart';
@@ -24,14 +21,64 @@ import '../../services/profile_controller.dart';
 import '../../services/speech_service.dart';
 import '../library/import_actions.dart';
 import '../share/share_dialog.dart';
+import '../widgets/profile_names.dart';
 import '../widgets/profile_pill.dart';
 import 'document_filter_sheet.dart';
 import 'editor_controller.dart';
 import 'editor_toolbar.dart';
+import 'notebook_canvas.dart';
+import 'open_tabs.dart';
+import 'page_menus.dart';
+import 'pages_panel.dart';
 import 'text_dialog.dart';
 
-/// Éditeur de note: page, barre d'outils (stylet, texte, surligneur,
-/// gomme), bouton profil toujours visible (section 7).
+/// Ouvre un cahier dans un onglet de l'éditeur.
+Future<void> openNotebook(BuildContext context, String notebookId,
+    {String? pageId}) async {
+  final tabs = context.read<OpenTabs>();
+  tabs.open(notebookId, pageId: pageId);
+  if (ModalRoute.of(context)?.settings.name != EditorShell.routeName) {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        settings: const RouteSettings(name: EditorShell.routeName),
+        builder: (_) => const EditorShell(),
+      ),
+    );
+  }
+}
+
+/// Onglets des documents ouverts + l'éditeur du document actif.
+class EditorShell extends StatelessWidget {
+  const EditorShell({super.key});
+
+  static const routeName = '/editor';
+
+  @override
+  Widget build(BuildContext context) {
+    final tabs = context.watch<OpenTabs>();
+    final repo = context.watch<NotesRepository>();
+    if (tabs.ids.any((id) => repo.notebook(id) == null)) {
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => tabs.retain((id) => repo.notebook(id) != null));
+    }
+    final active = tabs.active;
+    if (active == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted && Navigator.canPop(context)) Navigator.pop(context);
+      });
+      return const Scaffold();
+    }
+    return EditorScreen(
+      key: ValueKey(active),
+      notebookId: active,
+      initialPageId: tabs.lastPage(active),
+    );
+  }
+}
+
+/// Éditeur de note: pages en défilement continu, barre d'outils, panneau
+/// des pages, bouton profil toujours visible (section 7).
 class EditorScreen extends StatefulWidget {
   const EditorScreen({super.key, required this.notebookId, this.initialPageId});
 
@@ -45,28 +92,20 @@ class EditorScreen extends StatefulWidget {
 class _EditorScreenState extends State<EditorScreen> {
   late final EditorController ctl;
   late final SyncService _sync;
-  final TransformationController _view = TransformationController();
-  String? _fittedFor;
+  late final OpenTabs _tabs;
+  final CanvasViewController view = CanvasViewController();
+  bool _panel = false;
   bool _showOriginal = false;
-  bool _showOcrText = false;
-  ui.Image? _lastImage;
-  String? _lastImageKey;
-  bool _stylusDown = false;
-  final Set<int> _pointers = {};
-  Offset? _tapDown;
 
   @override
   void initState() {
     super.initState();
     final repo = context.read<NotesRepository>();
-    final pages = repo.pagesOf(widget.notebookId);
-    final initial = widget.initialPageId == null
-        ? 0
-        : pages.indexWhere((p) => p.id == widget.initialPageId).clamp(0, 1 << 20);
-    ctl = EditorController(repo, widget.notebookId, initialPage: initial)
-      ..addListener(_onCtl)
-      ..load();
+    ctl = EditorController(repo, widget.notebookId,
+        initialPageId: widget.initialPageId)
+      ..addListener(_onCtl);
     _sync = context.read<SyncService>()..watchNotebook(widget.notebookId);
+    _tabs = context.read<OpenTabs>();
   }
 
   void _onCtl() {
@@ -75,129 +114,22 @@ class _EditorScreenState extends State<EditorScreen> {
 
   @override
   void dispose() {
+    _tabs.rememberPage(widget.notebookId, ctl.currentPage?.id);
     ctl.removeListener(_onCtl);
     ctl.dispose();
-    _view.dispose();
+    view.dispose();
     _sync.watchNotebook(null);
     super.dispose();
   }
 
   // ------------------------------------------------------------------
-  // Entrées
+  // Actions
   // ------------------------------------------------------------------
 
-  bool _drawsWith(PointerEvent e) {
-    final finger = context.read<NotesRepository>().settings.fingerDrawing;
-    if (e.kind == PointerDeviceKind.touch && !finger) return false;
-    // Souris: bouton principal seulement (au relâchement, aucun bouton
-    // n'est plus enfoncé).
-    if (e.kind == PointerDeviceKind.mouse &&
-        e is! PointerUpEvent &&
-        e is! PointerCancelEvent &&
-        e.buttons != kPrimaryMouseButton) {
-      return false;
-    }
-    return true;
-  }
-
-  static double? _pressure(PointerEvent e) {
-    if (e.kind != PointerDeviceKind.stylus &&
-        e.kind != PointerDeviceKind.invertedStylus) {
-      return null;
-    }
-    final range = e.pressureMax - e.pressureMin;
-    if (range <= 0) return null;
-    return ((e.pressure - e.pressureMin) / range).clamp(0.0, 1.0);
-  }
-
-  void _onDown(PointerDownEvent e) {
-    _pointers.add(e.pointer);
-    if (e.kind == PointerDeviceKind.stylus ||
-        e.kind == PointerDeviceKind.invertedStylus) {
-      setState(() => _stylusDown = true);
-    }
-    if (_pointers.length > 1) {
-      // Deuxième doigt: zoom / défilement, pas de dessin.
-      if (ctl.hasLiveStroke) ctl.strokeCancel();
-      return;
-    }
-    if (!_drawsWith(e)) return;
-    final p = e.localPosition;
-    _tapDown = p;
-    final tool = e.kind == PointerDeviceKind.invertedStylus
-        ? EditorTool.eraser
-        : ctl.tool;
-    switch (tool) {
-      case EditorTool.pen:
-      case EditorTool.highlighter:
-        ctl.strokeStart(e.pointer, p, _pressure(e));
-      case EditorTool.eraser:
-        ctl.eraseAt(p);
-      case EditorTool.select:
-        ctl.selectStart(p);
-      case EditorTool.text:
-      case EditorTool.hand:
-        break;
-    }
-  }
-
-  void _onMove(PointerMoveEvent e) {
-    if (_pointers.length > 1 || !_drawsWith(e)) return;
-    final p = e.localPosition;
-    final tool = e.kind == PointerDeviceKind.invertedStylus
-        ? EditorTool.eraser
-        : ctl.tool;
-    switch (tool) {
-      case EditorTool.pen:
-      case EditorTool.highlighter:
-        ctl.strokeExtend(e.pointer, p, _pressure(e));
-      case EditorTool.eraser:
-        ctl.eraseAt(p);
-      case EditorTool.select:
-        ctl.selectUpdate(p);
-      case EditorTool.text:
-      case EditorTool.hand:
-        break;
-    }
-  }
-
-  void _onUp(PointerEvent e) {
-    final wasMulti = _pointers.length > 1;
-    _pointers.remove(e.pointer);
-    if (_stylusDown &&
-        (e.kind == PointerDeviceKind.stylus ||
-            e.kind == PointerDeviceKind.invertedStylus)) {
-      setState(() => _stylusDown = false);
-    }
-    if (wasMulti || !_drawsWith(e)) return;
-    final tool = e.kind == PointerDeviceKind.invertedStylus
-        ? EditorTool.eraser
-        : ctl.tool;
-    switch (tool) {
-      case EditorTool.pen:
-      case EditorTool.highlighter:
-        if (e is PointerCancelEvent) {
-          ctl.strokeCancel();
-        } else {
-          ctl.strokeEnd(e.pointer);
-        }
-      case EditorTool.eraser:
-        ctl.eraseEnd();
-      case EditorTool.select:
-        ctl.selectEnd();
-      case EditorTool.text:
-        final down = _tapDown;
-        if (down != null && (e.localPosition - down).distance < 12) {
-          _editTextAt(e.localPosition);
-        }
-      case EditorTool.hand:
-        break;
-    }
-    _tapDown = null;
-  }
-
-  Future<void> _editTextAt(Offset p) async {
-    final existing = ctl.textAt(p);
+  Future<void> _onTap(String pageId, Offset p) async {
+    if (ctl.tool != EditorTool.text && ctl.tool != EditorTool.lasso) return;
+    final existing = ctl.textAt(pageId, p);
+    if (existing == null && ctl.tool != EditorTool.text) return;
     final result = await showTextBlockDialog(
       context,
       initialText: existing?.text ?? '',
@@ -213,412 +145,26 @@ class _EditorScreenState extends State<EditorScreen> {
             text: result.text, role: result.role, size: result.size);
       }
     } else if (!result.delete) {
-      await ctl.addText(p, result.text, result.role, result.size);
+      await ctl.addText(pageId, p, result.text, result.role, result.size);
     }
   }
 
-  // ------------------------------------------------------------------
-  // Vue
-  // ------------------------------------------------------------------
-
-  void _fit(NotePage page, VisualProfile profile, Size viewport) {
-    final key = '${page.id}|${profile.text.defaultZoom}|${viewport.width.round()}';
-    if (_fittedFor == key) return;
-    _fittedFor = key;
-    final fit = ((viewport.width - 24) / page.width).clamp(0.2, 3.0);
-    final s = fit * profile.text.defaultZoom;
-    final dx = ((viewport.width - page.width * s) / 2).clamp(-double.infinity, 12.0);
-    _view.value = Matrix4.identity()
-      ..translateByDouble(dx < 12 ? 12 : dx, 12, 0, 1)
-      ..scaleByDouble(s, s, 1, 1);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final repo = context.watch<NotesRepository>();
-    final pc = context.watch<ProfileController>();
-    final notebook = repo.notebook(widget.notebookId);
-    if (notebook == null) {
-      return Scaffold(appBar: AppBar(), body: Center(child: Text(l.notebookMissing)));
-    }
-    final profile = pc.profileFor(notebook);
-    final palette = pc.paletteOf(profile);
-    final page = ctl.page;
-    final simplified = profile.simplifiedUi;
-
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyZ, control: true): ctl.undo,
-        const SingleActivator(LogicalKeyboardKey.keyZ, meta: true): ctl.undo,
-        const SingleActivator(LogicalKeyboardKey.keyZ, control: true, shift: true): ctl.redo,
-        const SingleActivator(LogicalKeyboardKey.keyZ, meta: true, shift: true): ctl.redo,
-        const SingleActivator(LogicalKeyboardKey.delete): ctl.deleteSelection,
-        const SingleActivator(LogicalKeyboardKey.backspace): ctl.deleteSelection,
-      },
-      child: Focus(
-        autofocus: true,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Semantics(
-              header: true,
-              child: Text(notebook.title, overflow: TextOverflow.ellipsis),
-            ),
-            actions: [
-              IconButton(
-                tooltip: l.undo,
-                onPressed: ctl.canUndo ? ctl.undo : null,
-                icon: const Icon(Icons.undo),
-              ),
-              if (!simplified)
-                IconButton(
-                  tooltip: l.redo,
-                  onPressed: ctl.canRedo ? ctl.redo : null,
-                  icon: const Icon(Icons.redo),
-                ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: ProfilePill(notebook: notebook),
-              ),
-              _menu(context, notebook, page, profile),
-            ],
-          ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              EditorToolbar(controller: ctl, palette: palette, simplified: simplified),
-              Expanded(
-                child: page == null
-                    ? const SizedBox.shrink()
-                    : LayoutBuilder(builder: (context, c) {
-                        _fit(page, profile, c.biggest);
-                        return _canvas(context, page, profile, palette, repo);
-                      }),
-              ),
-              _pageBar(context, l),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _canvas(BuildContext context, NotePage page, VisualProfile profile,
-      ResolvedPalette palette, NotesRepository repo) {
-    final l = AppLocalizations.of(context);
-    final finger = repo.settings.fingerDrawing;
-    final panEnabled = !_stylusDown &&
-        (ctl.tool == EditorTool.hand || !finger || ctl.tool == EditorTool.text);
-    final asset = repo.asset(page.assetId);
-    final fontScale = profile.text.sizeMultiplier;
-    final ocrMode = _showOcrText && page.ocrText != null;
-
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surfaceContainer,
-      child: ClipRect(
-        child: InteractiveViewer(
-          transformationController: _view,
-          constrained: false,
-          minScale: 0.3,
-          maxScale: 6,
-          boundaryMargin: const EdgeInsets.all(400),
-          panEnabled: panEnabled,
-          child: SizedBox(
-            width: page.width,
-            height: page.height,
-            child: Semantics(
-              label: l.pageSemantics(ctl.pageIndex + 1, ctl.pages.length),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: RepaintBoundary(
-                      child: asset == null || ocrMode
-                          ? CustomPaint(
-                              painter: PageBackgroundPainter(
-                                  palette: palette, template: page.template))
-                          : _assetLayer(context, asset, page, profile, palette),
-                    ),
-                  ),
-                  if (ocrMode)
-                    Positioned.fill(
-                      child: Padding(
-                        padding: const EdgeInsets.all(48),
-                        child: Text(
-                          page.ocrText!,
-                          style: TextStyle(
-                            color: palette.ink,
-                            fontSize: 16 * fontScale,
-                            height: profile.text.lineHeight,
-                            fontFamily: profile.text.font.family,
-                          ),
-                        ),
-                      ),
-                    ),
-                  Positioned.fill(
-                    child: RepaintBoundary(
-                      child: AnimatedSwitcher(
-                        // Fondu de 200 ms au changement de profil: pas de flash.
-                        duration: const Duration(milliseconds: 200),
-                        child: CustomPaint(
-                          key: ValueKey(palette),
-                          size: page.size,
-                          painter: InkPainter(
-                            palette: palette,
-                            strokes: ctl.strokes,
-                            highlights: ctl.highlights,
-                            cache: ctl.geometry,
-                            version: ctl.version,
-                            hidden: ctl.dragging ? ctl.selection : const {},
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  for (final t in ctl.texts)
-                    Positioned(
-                      left: t.x + (ctl.dragging && ctl.selection.contains(t.id) ? ctl.dragDelta.dx : 0),
-                      top: t.y + (ctl.dragging && ctl.selection.contains(t.id) ? ctl.dragDelta.dy : 0),
-                      width: t.width,
-                      child: Text(
-                        t.text,
-                        style: TextStyle(
-                          color: palette[t.role],
-                          fontSize: t.size * fontScale,
-                          fontWeight: t.role == InkRole.heading ? FontWeight.w700 : null,
-                          height: profile.text.lineHeight,
-                          wordSpacing: t.size * fontScale * profile.text.wordSpacing,
-                          fontFamily: profile.text.font.family,
-                        ),
-                      ),
-                    ),
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: CustomPaint(
-                        painter: _OverlayPainter(ctl, palette),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: IgnorePointer(
-                      child: CustomPaint(
-                        painter: _LiveStrokePainter(ctl, palette),
-                      ),
-                    ),
-                  ),
-                  Positioned.fill(
-                    child: Listener(
-                      key: const ValueKey('page-input'),
-                      behavior: HitTestBehavior.translucent,
-                      onPointerDown: _onDown,
-                      onPointerMove: _onMove,
-                      onPointerUp: _onUp,
-                      onPointerCancel: _onUp,
-                    ),
-                  ),
-                  if (ctl.loading)
-                    const Positioned.fill(
-                      child: Center(child: CircularProgressIndicator()),
-                    ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _assetLayer(BuildContext context, ImportedAsset asset, NotePage page,
-      VisualProfile profile, ResolvedPalette palette) {
-    final renderer = context.read<AssetRenderer>();
-    final key = '${asset.id}#${page.assetPage}#${AssetRenderer.profileKey(profile)}'
-        '#${asset.filter.cacheKey}#$_showOriginal';
-    return FutureBuilder<ui.Image?>(
-      future: renderer.pageImage(asset, page.assetPage ?? 1, profile,
-          original: _showOriginal),
-      builder: (context, snap) {
-        if (snap.hasData) {
-          _lastImage = snap.data;
-          _lastImageKey = key;
-        }
-        final img = snap.data ?? (_lastImageKey?.startsWith(asset.id) == true ? _lastImage : null);
-        if (snap.connectionState == ConnectionState.done && snap.data == null) {
-          return Stack(children: [
-            Positioned.fill(
-              child: CustomPaint(
-                painter: PageBackgroundPainter(
-                    palette: palette, template: PageTemplate.blank),
-              ),
-            ),
-            Center(child: Text(AppLocalizations.of(context).assetUnavailable)),
-          ]);
-        }
-        return AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          child: CustomPaint(
-            key: ValueKey(img),
-            size: page.size,
-            painter: PageBackgroundPainter(
-              palette: palette,
-              template: PageTemplate.blank,
-              image: img,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _pageBar(BuildContext context, AppLocalizations l) {
-    final n = ctl.pages.length;
-    final i = ctl.pageIndex;
-    return Material(
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            IconButton(
-              tooltip: l.previousPage,
-              onPressed: i > 0 ? () => ctl.goToPage(i - 1) : null,
-              icon: const Icon(Icons.chevron_left),
-            ),
-            Expanded(
-              child: Center(
-                child: Semantics(
-                  liveRegion: true,
-                  child: Text(l.pageOf(i + 1, n)),
-                ),
-              ),
-            ),
-            IconButton(
-              tooltip: l.nextPage,
-              onPressed: i < n - 1 ? () => ctl.goToPage(i + 1) : null,
-              icon: const Icon(Icons.chevron_right),
-            ),
-            IconButton(
-              tooltip: l.addPage,
-              onPressed: () => ctl.addPage(),
-              icon: const Icon(Icons.note_add_outlined),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ------------------------------------------------------------------
-  // Menu
-  // ------------------------------------------------------------------
-
-  Widget _menu(BuildContext context, Notebook notebook, NotePage? page,
-      VisualProfile profile) {
+  Future<void> _insertImage() async {
     final l = AppLocalizations.of(context);
     final repo = context.read<NotesRepository>();
-    final speech = context.watch<SpeechService>();
-    final ocr = context.read<OcrService>();
-    final asset = repo.asset(page?.assetId);
-    final sync = context.read<SyncService>();
-    return PopupMenuButton<String>(
-      tooltip: l.moreActions,
-      icon: const Icon(Icons.more_vert),
-      onSelected: (v) => _onMenu(v, notebook, page, profile),
-      itemBuilder: (_) => [
-        PopupMenuItem(value: 'export_normal', child: _item(Icons.picture_as_pdf_outlined, l.exportNormal)),
-        PopupMenuItem(value: 'export_profile', child: _item(Icons.palette_outlined, l.exportInProfile)),
-        if (sync.enabled && !repo.isShared(notebook))
-          PopupMenuItem(value: 'share', child: _item(Icons.group_add_outlined, l.shareNotebook)),
-        PopupMenuItem(
-          value: speech.speaking ? 'stop_reading' : 'read',
-          child: _item(speech.speaking ? Icons.stop_circle_outlined : Icons.record_voice_over_outlined,
-              speech.speaking ? l.stopReading : l.readAloud),
-        ),
-        if (ocr.available && page != null)
-          PopupMenuItem(value: 'ocr', child: _item(Icons.document_scanner_outlined, l.recognizeText)),
-        if (page?.ocrText != null)
-          CheckedPopupMenuItem(value: 'ocr_text', checked: _showOcrText, child: Text(l.showRecognizedText)),
-        if (asset != null)
-          CheckedPopupMenuItem(value: 'original', checked: _showOriginal, child: Text(l.showOriginal)),
-        if (asset != null)
-          PopupMenuItem(value: 'filter', child: _item(Icons.filter_b_and_w_outlined, l.documentFilter)),
-        PopupMenuItem(value: 'import', child: _item(Icons.upload_file_outlined, l.importIntoNotebook)),
-        if (asset == null)
-          PopupMenuItem(value: 'template', child: _item(Icons.grid_on_outlined, l.pageTemplate)),
-        PopupMenuItem(value: 'delete_page', child: _item(Icons.delete_outline, l.deletePage)),
-      ],
-    );
-  }
-
-  Widget _item(IconData icon, String text) => Row(children: [
-        Icon(icon),
-        const SizedBox(width: 12),
-        Flexible(child: Text(text)),
-      ]);
-
-  Future<void> _onMenu(String v, Notebook notebook, NotePage? page,
-      VisualProfile profile) async {
-    final l = AppLocalizations.of(context);
-    final repo = context.read<NotesRepository>();
-    final export = ExportService(repo, context.read<AssetRenderer>());
     final messenger = ScaffoldMessenger.of(context);
-    switch (v) {
-      case 'export_normal':
-        await _guard(() => export.shareNotebookPdf(notebook));
-      case 'export_profile':
-        await _guard(() => export.shareNotebookPdf(notebook, profile: profile));
-      case 'share':
-        await showShareDialog(context, notebook);
-      case 'read':
-        await context.read<SpeechService>().speak(_pageText(page),
-            languageCode: Localizations.localeOf(context).languageCode);
-      case 'stop_reading':
-        await context.read<SpeechService>().stopSpeaking();
-      case 'ocr':
-        if (page != null) await _runOcr(page);
-      case 'ocr_text':
-        setState(() => _showOcrText = !_showOcrText);
-      case 'original':
-        setState(() => _showOriginal = !_showOriginal);
-      case 'filter':
-        final asset = repo.asset(page?.assetId);
-        if (asset != null) await showDocumentFilterSheet(context, asset);
-      case 'import':
-        await importDocument(context, into: notebook);
-        await ctl.load();
-      case 'template':
-        final t = await showDialog<PageTemplate>(
-          context: context,
-          builder: (ctx) => SimpleDialog(
-            title: Text(l.pageTemplate),
-            children: [
-              for (final t in PageTemplate.values)
-                SimpleDialogOption(
-                  onPressed: () => Navigator.pop(ctx, t),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: Text(templateLabel(l, t)),
-                  ),
-                ),
-            ],
-          ),
-        );
-        if (t != null) await ctl.setTemplate(t);
-      case 'delete_page':
-        final ok = await showDialog<bool>(
-          context: context,
-          builder: (ctx) => AlertDialog(
-            title: Text(l.deletePage),
-            content: Text(l.deletePageConfirm),
-            actions: [
-              TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(l.cancel)),
-              FilledButton(onPressed: () => Navigator.pop(ctx, true), child: Text(l.delete)),
-            ],
-          ),
-        );
-        if (ok == true) await ctl.deleteCurrentPage();
+    final page = ctl.currentPage;
+    if (page == null) return;
+    final files = await FilePicker.pickFiles(type: FileType.image);
+    if (files.isEmpty) return;
+    try {
+      final bytes = await files.first.xFile.readAsBytes();
+      final size = await AssetRenderer.imageSize(bytes);
+      final asset = await repo.createImageAsset(widget.notebookId, bytes, files.first.name);
+      await ctl.addImage(page.id, asset, Size(size.width, size.height));
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text(l.importFailed('$e'))));
     }
-    if (!mounted) return;
-    messenger.hideCurrentSnackBar();
   }
 
   Future<void> _guard(Future<void> Function() f) async {
@@ -633,15 +179,355 @@ class _EditorScreenState extends State<EditorScreen> {
     }
   }
 
-  String _pageText(NotePage? page) {
-    final texts = [...ctl.texts]..sort((a, b) {
+  // ------------------------------------------------------------------
+  // Interface
+  // ------------------------------------------------------------------
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final repo = context.watch<NotesRepository>();
+    final pc = context.watch<ProfileController>();
+    final notebook = repo.notebook(widget.notebookId);
+    if (notebook == null) {
+      return Scaffold(appBar: AppBar(), body: Center(child: Text(l.notebookMissing)));
+    }
+    final profile = pc.profileFor(notebook);
+    final palette = pc.paletteOf(profile);
+    final simplified = profile.simplifiedUi;
+    final wide = MediaQuery.sizeOf(context).width > 700;
+
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.keyZ, control: true): ctl.undo,
+        const SingleActivator(LogicalKeyboardKey.keyZ, meta: true): ctl.undo,
+        const SingleActivator(LogicalKeyboardKey.keyZ, control: true, shift: true): ctl.redo,
+        const SingleActivator(LogicalKeyboardKey.keyZ, meta: true, shift: true): ctl.redo,
+        const SingleActivator(LogicalKeyboardKey.keyC, control: true): ctl.copySelection,
+        const SingleActivator(LogicalKeyboardKey.keyC, meta: true): ctl.copySelection,
+        const SingleActivator(LogicalKeyboardKey.keyX, control: true): ctl.cutSelection,
+        const SingleActivator(LogicalKeyboardKey.keyX, meta: true): ctl.cutSelection,
+        const SingleActivator(LogicalKeyboardKey.keyV, control: true): _paste,
+        const SingleActivator(LogicalKeyboardKey.keyV, meta: true): _paste,
+        const SingleActivator(LogicalKeyboardKey.delete): ctl.deleteSelection,
+        const SingleActivator(LogicalKeyboardKey.backspace): ctl.deleteSelection,
+        const SingleActivator(LogicalKeyboardKey.pageDown): () =>
+            view.jumpToPage(ctl.currentIndex + 1),
+        const SingleActivator(LogicalKeyboardKey.pageUp): () =>
+            view.jumpToPage(ctl.currentIndex - 1),
+      },
+      child: Focus(
+        autofocus: true,
+        child: Scaffold(
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const DocumentTabsBar(),
+                _topBar(context, l, notebook, profile, simplified),
+                EditorToolbar(
+                  controller: ctl,
+                  palette: palette,
+                  simplified: simplified,
+                  onImage: _insertImage,
+                  onPaste: EditorController.clipboard.isEmpty ? null : _paste,
+                ),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (_panel)
+                        SizedBox(
+                          width: wide ? 260 : 200,
+                          child: PagesPanel(
+                            controller: ctl,
+                            view: view,
+                            profile: profile,
+                            palette: palette,
+                          ),
+                        ),
+                      if (_panel) const VerticalDivider(width: 1),
+                      Expanded(
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: NotebookCanvas(
+                                controller: ctl,
+                                view: view,
+                                profile: profile,
+                                palette: palette,
+                                horizontal: repo.settings.scrollHorizontal,
+                                fingerDrawing: repo.settings.fingerDrawing,
+                                showOriginal: _showOriginal,
+                                onTap: _onTap,
+                              ),
+                            ),
+                            if (ctl.hasSelection && !ctl.dragging)
+                              Positioned(
+                                top: 8,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: _SelectionBar(controller: ctl, palette: palette),
+                                ),
+                              ),
+                            Positioned(
+                              bottom: 12,
+                              left: 0,
+                              right: 0,
+                              child: Center(child: _pageIndicator(context, l)),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _paste() {
+    final page = ctl.currentPage;
+    if (page != null) ctl.paste(page.id);
+  }
+
+  Widget _topBar(BuildContext context, AppLocalizations l, Notebook notebook,
+      VisualProfile profile, bool simplified) {
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.surfaceContainerHigh,
+      child: SizedBox(
+        height: 56,
+        child: Row(
+          children: [
+            IconButton(
+              tooltip: l.library,
+              icon: const Icon(Icons.home_outlined),
+              onPressed: () => Navigator.of(context).maybePop(),
+            ),
+            IconButton(
+              tooltip: l.pagesPanel,
+              isSelected: _panel,
+              icon: const Icon(Icons.view_sidebar_outlined),
+              onPressed: () => setState(() => _panel = !_panel),
+            ),
+            IconButton(
+              tooltip: l.searchInDocument,
+              icon: const Icon(Icons.search),
+              onPressed: () async {
+                final i = await showDocumentSearch(context, ctl);
+                if (i != null) view.jumpToPage(i);
+              },
+            ),
+            Expanded(
+              child: Semantics(
+                header: true,
+                child: InkWell(
+                  onTap: () async {
+                    final name = await askText(context, l.rename, notebook.title);
+                    if (name != null && name.isNotEmpty) {
+                      await ctl.repo.updateNotebook(notebook.copyWith(title: name));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                    child: Text(notebook.title,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.titleMedium),
+                  ),
+                ),
+              ),
+            ),
+            IconButton(
+              tooltip: l.undo,
+              onPressed: ctl.canUndo ? ctl.undo : null,
+              icon: const Icon(Icons.undo),
+            ),
+            if (!simplified)
+              IconButton(
+                tooltip: l.redo,
+                onPressed: ctl.canRedo ? ctl.redo : null,
+                icon: const Icon(Icons.redo),
+              ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4),
+              child: ProfilePill(notebook: notebook),
+            ),
+            IconButton(
+              tooltip: l.addPage,
+              icon: const Icon(Icons.note_add_outlined),
+              onPressed: () => showAddPageSheet(context, ctl, view),
+            ),
+            _shareMenu(context, l, notebook, profile),
+            IconButton(
+              tooltip: l.moreActions,
+              icon: const Icon(Icons.more_horiz),
+              onPressed: () {
+                final page = ctl.currentPage;
+                if (page != null) showPageMenu(context, ctl, view, page);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _pageIndicator(BuildContext context, AppLocalizations l) {
+    return ValueListenableBuilder<int>(
+      valueListenable: ctl.currentPageNotifier,
+      builder: (context, _, _) {
+        final n = ctl.pages.length;
+        final i = ctl.currentIndex;
+        return Material(
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
+          shape: const StadiumBorder(),
+          elevation: 2,
+          child: InkWell(
+            customBorder: const StadiumBorder(),
+            onTap: () async {
+              final target = await showGoToPage(context, n);
+              if (target != null) view.jumpToPage(target);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Semantics(
+                liveRegion: true,
+                child: Text(l.pageOf(i + 1, n)),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _shareMenu(BuildContext context, AppLocalizations l, Notebook notebook,
+      VisualProfile profile) {
+    final repo = context.read<NotesRepository>();
+    final speech = context.watch<SpeechService>();
+    final ocr = context.read<OcrService>();
+    final page = ctl.currentPage;
+    final asset = repo.asset(page?.assetId);
+    final sync = context.read<SyncService>();
+    Widget item(IconData icon, String text) => Row(children: [
+          Icon(icon),
+          const SizedBox(width: 12),
+          Flexible(child: Text(text)),
+        ]);
+    return PopupMenuButton<String>(
+      tooltip: l.shareAndExport,
+      icon: const Icon(Icons.ios_share),
+      onSelected: (v) => _onShareMenu(v, notebook, profile),
+      itemBuilder: (_) => [
+        PopupMenuItem(value: 'export_normal', child: item(Icons.picture_as_pdf_outlined, l.exportNormal)),
+        PopupMenuItem(value: 'export_profile', child: item(Icons.palette_outlined, l.exportInProfile)),
+        if (sync.enabled && !repo.isShared(notebook))
+          PopupMenuItem(value: 'share', child: item(Icons.group_add_outlined, l.shareNotebook)),
+        PopupMenuItem(
+          value: speech.speaking ? 'stop_reading' : 'read',
+          child: item(speech.speaking ? Icons.stop_circle_outlined : Icons.record_voice_over_outlined,
+              speech.speaking ? l.stopReading : l.readAloud),
+        ),
+        if (ocr.available && page != null)
+          PopupMenuItem(value: 'ocr', child: item(Icons.document_scanner_outlined, l.recognizeText)),
+        if (page?.ocrText != null)
+          PopupMenuItem(value: 'ocr_text', child: item(Icons.text_snippet_outlined, l.showRecognizedText)),
+        if (asset != null)
+          CheckedPopupMenuItem(value: 'original', checked: _showOriginal, child: Text(l.showOriginal)),
+        if (asset != null)
+          PopupMenuItem(value: 'filter', child: item(Icons.filter_b_and_w_outlined, l.documentFilter)),
+        PopupMenuItem(value: 'import', child: item(Icons.upload_file_outlined, l.importIntoNotebook)),
+      ],
+    );
+  }
+
+  Future<void> _onShareMenu(String v, Notebook notebook, VisualProfile profile) async {
+    final repo = context.read<NotesRepository>();
+    final export = ExportService(repo, context.read<AssetRenderer>());
+    final page = ctl.currentPage;
+    switch (v) {
+      case 'export_normal':
+        await _guard(() => export.shareNotebookPdf(notebook));
+      case 'export_profile':
+        await _guard(() => export.shareNotebookPdf(notebook, profile: profile));
+      case 'share':
+        await showShareDialog(context, notebook);
+      case 'read':
+        final speech = context.read<SpeechService>();
+        final lang = Localizations.localeOf(context).languageCode;
+        await speech.speak(await _pageText(page), languageCode: lang);
+      case 'stop_reading':
+        await context.read<SpeechService>().stopSpeaking();
+      case 'ocr':
+        if (page != null) await _runOcr(page);
+      case 'ocr_text':
+        if (page?.ocrText != null) await _showRecognized(page!.ocrText!, profile);
+      case 'original':
+        setState(() => _showOriginal = !_showOriginal);
+      case 'filter':
+        final asset = repo.asset(page?.assetId);
+        if (asset != null) await showDocumentFilterSheet(context, asset);
+      case 'import':
+        await importDocument(context, into: notebook, at: page);
+    }
+  }
+
+  Future<String> _pageText(NotePage? page) async {
+    if (page == null) return '';
+    final c = ctl.content(page.id) ?? await ctl.repo.loadPage(page);
+    final texts = [...c.texts]..sort((a, b) {
         final dy = a.y.compareTo(b.y);
         return dy != 0 ? dy : a.x.compareTo(b.x);
       });
     return [
       for (final t in texts) t.text,
-      if (page?.ocrText != null) page!.ocrText!,
+      if (page.ocrText != null) page.ocrText!,
     ].join('\n');
+  }
+
+  /// Texte reconnu affiché en vrai texte recoloré (plus net que le filtre
+  /// d'image), avec lecture à voix haute.
+  Future<void> _showRecognized(String text, VisualProfile profile) {
+    final l = AppLocalizations.of(context);
+    return showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (ctx) => SafeArea(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(ctx).height * 0.8),
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            children: [
+              Row(children: [
+                Expanded(child: Text(l.showRecognizedText, style: Theme.of(ctx).textTheme.titleLarge)),
+                IconButton(
+                  tooltip: l.readAloud,
+                  icon: const Icon(Icons.record_voice_over_outlined),
+                  onPressed: () => ctx.read<SpeechService>().speak(text,
+                      languageCode: Localizations.localeOf(ctx).languageCode),
+                ),
+              ]),
+              const SizedBox(height: 12),
+              SelectableText(
+                text,
+                style: TextStyle(
+                  fontSize: profile.text.baseSize,
+                  height: profile.text.lineHeight,
+                  fontFamily: profile.text.font.family,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   /// OCR sur l'appareil: page de PDF/image, ou écriture manuscrite rendue
@@ -659,7 +545,13 @@ class _EditorScreenState extends State<EditorScreen> {
       image = await renderer.pageImage(asset, page.assetPage ?? 1, Presets.standard,
           original: true);
     } else {
-      image = await _renderPageForOcr(page);
+      final c = ctl.content(page.id) ?? await repo.loadPage(page);
+      final recorder = ui.PictureRecorder();
+      final canvas = Canvas(recorder);
+      final palette = ResolvedPalette.of(Presets.standard);
+      canvas.drawRect(Offset.zero & page.size, Paint()..color = palette.paper);
+      paintStrokes(canvas, palette, c.strokes, ctl.geometry);
+      image = await recorder.endRecording().toImage(page.width.round(), page.height.round());
     }
     final png = await image?.toByteData(format: ui.ImageByteFormat.png);
     final text = png == null ? null : await ocr.recognizePng(png.buffer.asUint8List());
@@ -669,107 +561,115 @@ class _EditorScreenState extends State<EditorScreen> {
       return;
     }
     await repo.updatePage(repo.page(page.id)!.copyWith(ocrText: text));
-    if (!mounted) return;
-    setState(() => _showOcrText = asset != null);
     messenger.showSnackBar(SnackBar(content: Text(l.ocrDone)));
   }
-
-  Future<ui.Image> _renderPageForOcr(NotePage page) {
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    final palette = ResolvedPalette.of(Presets.standard);
-    canvas.drawRect(Offset.zero & page.size, Paint()..color = palette.paper);
-    paintStrokes(canvas, palette, ctl.strokes, ctl.geometry);
-    return recorder.endRecording().toImage(page.width.round(), page.height.round());
-  }
 }
 
-String templateLabel(AppLocalizations l, PageTemplate t) => switch (t) {
-      PageTemplate.blank => l.templateBlank,
-      PageTemplate.lined => l.templateLined,
-      PageTemplate.grid => l.templateGrid,
-      PageTemplate.dotted => l.templateDotted,
-    };
-
-/// Trait en cours, redessiné à chaque point sans toucher aux autres couches.
-class _LiveStrokePainter extends CustomPainter {
-  _LiveStrokePainter(this.ctl, this.palette) : super(repaint: ctl.liveVersion);
-
-  final EditorController ctl;
+/// Barre flottante au-dessus d'une sélection au lasso.
+class _SelectionBar extends StatelessWidget {
+  const _SelectionBar({required this.controller, required this.palette});
+  final EditorController controller;
   final ResolvedPalette palette;
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final pts = ctl.live;
-    if (pts.isEmpty) return;
-    final highlight = ctl.tool == EditorTool.highlighter;
-    final hasPressure = pts[2] >= 0;
-    final vectors = <PointVector>[
-      for (var i = 0; i + 2 < pts.length; i += 3)
-        PointVector(pts[i], pts[i + 1], hasPressure ? pts[i + 2] : null),
-    ];
-    final width = highlight ? ctl.highlighterWidth : ctl.penWidth;
-    final path = StrokeGeometryCache.outlinePath(vectors, width,
-        highlight: highlight, complete: false);
-    final color = highlight
-        ? palette.highlight(ctl.highlightRole)
-        : palette[ctl.inkRole];
-    canvas.drawPath(path, Paint()..color = color);
-    final m = palette.widthMultiplier;
-    if (!highlight && m > 1.01) {
-      canvas.drawPath(
-        path,
-        Paint()
-          ..color = color
-          ..style = PaintingStyle.stroke
-          ..strokeJoin = StrokeJoin.round
-          ..strokeWidth = width * (m - 1),
-      );
-    }
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final ctl = controller;
+    return Material(
+      elevation: 3,
+      borderRadius: BorderRadius.circular(28),
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(tooltip: l.copy, icon: const Icon(Icons.copy_outlined), onPressed: ctl.copySelection),
+            IconButton(tooltip: l.cut, icon: const Icon(Icons.content_cut), onPressed: ctl.cutSelection),
+            IconButton(tooltip: l.duplicate, icon: const Icon(Icons.control_point_duplicate), onPressed: ctl.duplicateSelection),
+            PopupMenuButton<InkRole>(
+              tooltip: l.changeInk,
+              icon: const Icon(Icons.palette_outlined),
+              onSelected: ctl.setSelectionRole,
+              itemBuilder: (_) => [
+                for (final r in [...InkRole.writingInks, ...InkRole.highlights])
+                  PopupMenuItem(
+                    value: r,
+                    child: Row(children: [
+                      CircleAvatar(
+                        radius: 10,
+                        backgroundColor: r.isHighlight
+                            ? Color.alphaBlend(palette.highlight(r), palette.paper)
+                            : palette[r],
+                      ),
+                      const SizedBox(width: 12),
+                      Text(roleLabel(context, r)),
+                    ]),
+                  ),
+              ],
+            ),
+            IconButton(tooltip: l.deleteSelection, icon: const Icon(Icons.delete_outline), onPressed: ctl.deleteSelection),
+          ],
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_LiveStrokePainter old) => old.palette != palette;
 }
 
-/// Rectangle de sélection et cadre des éléments sélectionnés (tirets:
-/// visible sans dépendre de la couleur).
-class _OverlayPainter extends CustomPainter {
-  _OverlayPainter(this.ctl, this.palette);
-  final EditorController ctl;
-  final ResolvedPalette palette;
+/// Barre des onglets de documents ouverts.
+class DocumentTabsBar extends StatelessWidget {
+  const DocumentTabsBar({super.key});
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = palette[InkRole.accent2]
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-    final r = ctl.selectionRect;
-    if (r != null) {
-      canvas.drawPath(
-          dashPath(Path()..addRect(r), StrokePattern.dashed, 2), paint);
-    }
-    var b = ctl.selectionBounds;
-    if (b != null) {
-      if (ctl.dragging) {
-        b = b.shift(ctl.dragDelta);
-        final ghost = ctl.strokes.where((s) => ctl.selection.contains(s.id)).toList();
-        canvas.save();
-        canvas.translate(ctl.dragDelta.dx, ctl.dragDelta.dy);
-        paintStrokes(canvas, palette, ghost, ctl.geometry);
-        paintHighlights(canvas, palette,
-            ctl.highlights.where((s) => ctl.selection.contains(s.id)).toList(),
-            ctl.geometry);
-        canvas.restore();
-      }
-      canvas.drawPath(
-          dashPath(Path()..addRRect(RRect.fromRectAndRadius(b.inflate(8), const Radius.circular(6))),
-              StrokePattern.dashed, 2),
-          paint);
-    }
+  Widget build(BuildContext context) {
+    final tabs = context.watch<OpenTabs>();
+    final repo = context.watch<NotesRepository>();
+    final l = AppLocalizations.of(context);
+    if (tabs.ids.length < 2) return const SizedBox.shrink();
+    final scheme = Theme.of(context).colorScheme;
+    return Material(
+      color: scheme.surfaceContainerLow,
+      child: SizedBox(
+        height: 44,
+        child: ListView(
+          scrollDirection: Axis.horizontal,
+          children: [
+            for (final id in tabs.ids)
+              Semantics(
+                selected: id == tabs.active,
+                button: true,
+                child: InkWell(
+                  onTap: () => tabs.activate(id),
+                  child: Container(
+                    constraints: const BoxConstraints(maxWidth: 220, minWidth: 120),
+                    padding: const EdgeInsets.only(left: 14),
+                    decoration: BoxDecoration(
+                      color: id == tabs.active ? scheme.surfaceContainerHigh : null,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: id == tabs.active ? scheme.primary : Colors.transparent,
+                          width: 3,
+                        ),
+                      ),
+                    ),
+                    child: Row(children: [
+                      Expanded(
+                        child: Text(repo.notebook(id)?.title ?? '',
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      IconButton(
+                        tooltip: l.closeTab,
+                        iconSize: 18,
+                        icon: const Icon(Icons.close),
+                        onPressed: () => tabs.close(id),
+                      ),
+                    ]),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(_OverlayPainter old) => true;
 }

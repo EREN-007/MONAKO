@@ -52,30 +52,65 @@ class StrokeGeometryCache {
             pressure ? s.points[i * 3 + 2] : null),
     ];
     return StrokeGeometry(
-      outlinePath(pts, s.width, highlight: s.highlight, complete: true),
+      outlinePath(pts, s.width,
+          highlight: s.highlight, complete: true, pen: s.pen),
       centerlinePath(pts),
       s.width,
     );
   }
 
-  static StrokeOptions options(double width,
-          {required bool highlight, required bool complete, bool simulate = true}) =>
-      StrokeOptions(
+  /// Réglages de forme du trait selon le stylo. La pression vient déjà
+  /// adoucie de la saisie (courbe + lissage): l'amincissement reste modéré
+  /// pour qu'un appui léger ne donne jamais un trait « qui manque d'encre ».
+  static StrokeOptions options(
+    double width, {
+    required bool highlight,
+    required bool complete,
+    bool simulate = true,
+    PenType pen = PenType.fountain,
+  }) {
+    if (highlight) {
+      return StrokeOptions(
         size: width,
-        thinning: highlight ? 0 : 0.55,
+        thinning: 0,
         smoothing: 0.5,
-        streamline: highlight ? 0.6 : 0.45,
-        simulatePressure: simulate,
+        streamline: 0.55,
+        simulatePressure: false,
         isComplete: complete,
       );
+    }
+    final (thinning, smoothing, streamline) = switch (pen) {
+      PenType.ball => (0.08, 0.55, 0.45),
+      PenType.fountain => (simulate ? 0.18 : 0.42, 0.6, 0.42),
+      PenType.brush => (simulate ? 0.4 : 0.68, 0.62, 0.45),
+      PenType.shape => (0.0, 0.0, 0.0),
+    };
+    return StrokeOptions(
+      size: width,
+      thinning: thinning,
+      smoothing: smoothing,
+      streamline: streamline,
+      // Sans capteur de pression, une pression simulée par la vitesse
+      // reste douce (fountain, brush); bille et formes: épaisseur fixe.
+      simulatePressure:
+          simulate && (pen == PenType.fountain || pen == PenType.brush),
+      // Toujours « complet »: la fin du trait suit la pointe, sans retard.
+      isComplete: true,
+    );
+  }
 
   static Path outlinePath(List<PointVector> pts, double width,
-      {required bool highlight, required bool complete}) {
+      {required bool highlight,
+      required bool complete,
+      PenType pen = PenType.fountain}) {
     final hasPressure = pts.isNotEmpty && pts.first.pressure != null;
     final outline = getStroke(
       pts,
       options: options(width,
-          highlight: highlight, complete: complete, simulate: !hasPressure),
+          highlight: highlight,
+          complete: complete,
+          simulate: !hasPressure,
+          pen: pen),
     );
     final path = Path();
     if (outline.isEmpty) return path;

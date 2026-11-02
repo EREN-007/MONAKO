@@ -27,8 +27,13 @@ class AssetRenderer {
   /// Largeur de rendu en pixels (la page logique fait 800 de large).
   static const renderWidth = 1600;
 
-  final _raw = _Lru<String, Future<RawPage?>>(8);
-  final _recolored = _Lru<String, Future<ui.Image?>>(16);
+  /// Largeur des vignettes (panneau des pages, bibliothèque).
+  static const thumbnailWidth = 240;
+
+  // Caches limités: une page à 1600 px pèse ~13 Mo.
+  final _raw = _Lru<String, Future<RawPage?>>(4);
+  final _recolored = _Lru<String, Future<ui.Image?>>(8);
+  final _thumbs = _Lru<String, Future<ui.Image?>>(48);
   final Map<String, Future<PdfDocument>> _docs = {};
 
   static String profileKey(VisualProfile p) =>
@@ -43,13 +48,15 @@ class AssetRenderer {
     int pageNumber,
     VisualProfile profile, {
     bool original = false,
+    int width = renderWidth,
   }) {
     final settings = asset.filter;
     final key = original || settings.mode == RecolorMode.off
-        ? '${asset.id}#$pageNumber#original'
-        : '${asset.id}#$pageNumber#${profileKey(profile)}#${settings.cacheKey}';
-    return _recolored.putIfAbsent(key, () async {
-      final raw = await rawPage(asset, pageNumber);
+        ? '${asset.id}#$pageNumber#$width#original'
+        : '${asset.id}#$pageNumber#$width#${profileKey(profile)}#${settings.cacheKey}';
+    final cache = width < renderWidth ? _thumbs : _recolored;
+    return cache.putIfAbsent(key, () async {
+      final raw = await rawPage(asset, pageNumber, width: width);
       if (raw == null) return null;
       Uint8List pixels = raw.rgba;
       if (!original && settings.mode != RecolorMode.off) {
@@ -72,17 +79,24 @@ class AssetRenderer {
     });
   }
 
-  Future<RawPage?> rawPage(ImportedAsset asset, int pageNumber) =>
-      _raw.putIfAbsent('${asset.id}#$pageNumber', () async {
-        final bytes = await repo.assetBytes(asset);
-        if (bytes == null) return null;
-        return asset.kind == AssetKind.pdf
-            ? _renderPdfPage(asset.id, bytes, pageNumber)
-            : _decodeImage(bytes);
-      });
+  Future<RawPage?> rawPage(ImportedAsset asset, int pageNumber,
+      {int width = renderWidth}) {
+    Future<RawPage?> render() async {
+      final bytes = await repo.assetBytes(asset);
+      if (bytes == null) return null;
+      return asset.kind == AssetKind.pdf
+          ? _renderPdfPage(asset.id, bytes, pageNumber, width)
+          : _decodeImage(bytes, width);
+    }
+
+    // Les vignettes ne passent pas par le cache des pages pleine taille.
+    return width < renderWidth
+        ? render()
+        : _raw.putIfAbsent('${asset.id}#$pageNumber', render);
+  }
 
   Future<RawPage?> _renderPdfPage(
-      String assetId, Uint8List bytes, int pageNumber) async {
+      String assetId, Uint8List bytes, int pageNumber, int renderWidth) async {
     final doc = await (_docs[assetId] ??=
         PdfDocument.openData(Uint8List.fromList(bytes)));
     final page = await doc.getPage(pageNumber);
@@ -95,13 +109,13 @@ class AssetRenderer {
         backgroundColor: '#FFFFFF',
       );
       if (img == null) return null;
-      return await _decodeImage(img.bytes);
+      return await _decodeImage(img.bytes, renderWidth);
     } finally {
       await page.close();
     }
   }
 
-  static Future<RawPage?> _decodeImage(Uint8List bytes) async {
+  static Future<RawPage?> _decodeImage(Uint8List bytes, int renderWidth) async {
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
     var image = frame.image;

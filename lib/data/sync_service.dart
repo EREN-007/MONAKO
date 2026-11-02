@@ -352,6 +352,7 @@ class SyncService extends ChangeNotifier {
       Tables.strokes,
       Tables.highlights,
       Tables.textBlocks,
+      Tables.pageImages,
     ]) {
       channel = channel.onPostgresChanges(
         event: PostgresChangeEvent.all,

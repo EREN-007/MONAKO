@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../../core/profiles/palette.dart';
 import '../../core/roles.dart';
+import '../../data/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/profile_names.dart';
 import 'editor_controller.dart';
 
-/// Barre d'outils: stylet, surligneur, texte, gomme, sélection, main.
-/// Chaque encre est un rôle; la pastille montre la couleur du profil actif
-/// et porte un repère (numéro, motif) pour ne pas dépendre de la couleur.
+/// Barre d'outils: stylet, surligneur, gomme, lasso, formes, texte, laser,
+/// image, main. Chaque encre est un rôle; la pastille montre la couleur du
+/// profil actif et porte un repère (numéro, motif) pour ne pas dépendre de
+/// la couleur.
 class EditorToolbar extends StatelessWidget {
   const EditorToolbar({
     super.key,
     required this.controller,
     required this.palette,
     this.simplified = false,
+    this.onImage,
+    this.onPaste,
   });
 
   final EditorController controller;
@@ -22,6 +26,8 @@ class EditorToolbar extends StatelessWidget {
 
   /// Interface simplifiée (profil D): moins d'outils, boutons plus grands.
   final bool simplified;
+  final VoidCallback? onImage;
+  final VoidCallback? onPaste;
 
   @override
   Widget build(BuildContext context) {
@@ -31,10 +37,12 @@ class EditorToolbar extends StatelessWidget {
     final tools = <(EditorTool, IconData, String)>[
       (EditorTool.pen, Icons.edit_outlined, l.toolPen),
       (EditorTool.highlighter, Icons.highlight_outlined, l.toolHighlighter),
-      (EditorTool.text, Icons.text_fields, l.toolText),
       (EditorTool.eraser, Icons.auto_fix_normal_outlined, l.toolEraser),
-      if (!simplified) (EditorTool.select, Icons.highlight_alt, l.toolSelect),
-      if (!simplified) (EditorTool.hand, Icons.pan_tool_outlined, l.toolHand),
+      if (!simplified) (EditorTool.lasso, Icons.gesture, l.toolLasso),
+      if (!simplified) (EditorTool.shapes, Icons.category_outlined, l.toolShapes),
+      (EditorTool.text, Icons.text_fields, l.toolText),
+      if (!simplified) (EditorTool.laser, Icons.flare, l.toolLaser),
+      (EditorTool.hand, Icons.pan_tool_outlined, l.toolHand),
     ];
     final iconSize = simplified ? 32.0 : 24.0;
 
@@ -66,6 +74,13 @@ class EditorToolbar extends StatelessWidget {
                   ),
                 ),
               ),
+            if (onImage != null)
+              IconButton(
+                tooltip: l.insertImage,
+                iconSize: iconSize,
+                onPressed: onImage,
+                icon: const Icon(Icons.add_photo_alternate_outlined),
+              ),
             const SizedBox(width: 8),
             const SizedBox(height: 32, child: VerticalDivider()),
             const SizedBox(width: 8),
@@ -78,43 +93,62 @@ class EditorToolbar extends StatelessWidget {
 
   List<Widget> _options(BuildContext context, AppLocalizations l) {
     final ctl = controller;
-    switch (ctl.tool) {
-      case EditorTool.pen:
-      case EditorTool.text:
-        return [
+    Widget inks() => Row(mainAxisSize: MainAxisSize.min, children: [
           for (final r in simplified
-              ? const [
-                  InkRole.inkPrimary,
-                  InkRole.accent1,
-                  InkRole.accent2,
-                  InkRole.heading,
-                ]
+              ? const [InkRole.inkPrimary, InkRole.accent1, InkRole.accent2, InkRole.heading]
               : InkRole.writingInks)
             RoleChip(
               role: r,
               color: palette[r],
               paper: palette.paper,
               selected: ctl.inkRole == r,
-              pattern:
-                  palette.rolePatterns ? patternForRole(r) : StrokePattern.solid,
-              onTap: () => ctl.setInkRole(r),
+              pattern: palette.rolePatterns ? patternForRole(r) : StrokePattern.solid,
+              onTap: () => ctl.update(() => ctl.inkRole = r),
             ),
-          if (ctl.tool == EditorTool.pen) ...[
-            const SizedBox(width: 8),
-            for (final (w, label) in [
-              (1.6, l.widthFine),
-              (2.4, l.widthMedium),
-              (4.0, l.widthThick),
-            ])
-              _WidthChip(
-                width: w,
-                label: label,
-                selected: (ctl.penWidth - w).abs() < 0.01,
-                color: palette.ink,
-                onTap: () => ctl.setPenWidth(w),
-              ),
+        ]);
+    Widget widths(List<(double, String)> presets, double current,
+            void Function(double) set, Color color) =>
+        Row(mainAxisSize: MainAxisSize.min, children: [
+          for (final (w, label) in presets)
+            _WidthChip(
+              width: w,
+              label: label,
+              selected: (current - w).abs() < 0.01,
+              color: color,
+              onTap: () => ctl.update(() => set(w)),
+            ),
+        ]);
+
+    switch (ctl.tool) {
+      case EditorTool.pen:
+        return [
+          if (!simplified) ...[
+            _PenTypeMenu(controller: ctl),
+            const SizedBox(width: 4),
           ],
+          inks(),
+          const SizedBox(width: 8),
+          widths([(1.6, l.widthFine), (2.4, l.widthMedium), (4.0, l.widthThick)],
+              ctl.penWidth, (w) => ctl.penWidth = w, palette.ink),
+          if (!simplified)
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(l.holdToShape, style: Theme.of(context).textTheme.bodySmall),
+            ),
         ];
+      case EditorTool.shapes:
+        return [
+          inks(),
+          const SizedBox(width: 8),
+          widths([(1.6, l.widthFine), (2.4, l.widthMedium), (4.0, l.widthThick)],
+              ctl.penWidth, (w) => ctl.penWidth = w, palette.ink),
+          Padding(
+            padding: const EdgeInsets.only(left: 8),
+            child: Text(l.shapesHint, style: Theme.of(context).textTheme.bodySmall),
+          ),
+        ];
+      case EditorTool.text:
+        return [inks(), const SizedBox(width: 8), Text(l.textHint)];
       case EditorTool.highlighter:
         return [
           for (final r in InkRole.highlights)
@@ -123,31 +157,95 @@ class EditorToolbar extends StatelessWidget {
               color: palette.highlight(r),
               paper: palette.paper,
               selected: ctl.highlightRole == r,
-              onTap: () => ctl.setHighlightRole(r),
+              onTap: () => ctl.update(() => ctl.highlightRole = r),
             ),
-        ];
-      case EditorTool.select:
-        if (ctl.selection.isEmpty) return [Text(l.selectHint)];
-        return [
-          IconButton(
-            tooltip: l.deleteSelection,
-            onPressed: ctl.deleteSelection,
-            icon: const Icon(Icons.delete_outline),
-          ),
-          for (final r in InkRole.writingInks)
-            RoleChip(
-              role: r,
-              color: palette[r],
-              paper: palette.paper,
-              selected: false,
-              onTap: () => ctl.setSelectionRole(r),
-            ),
+          const SizedBox(width: 8),
+          widths([(12, l.widthFine), (18, l.widthMedium), (28, l.widthThick)],
+              ctl.highlighterWidth, (w) => ctl.highlighterWidth = w,
+              palette.highlight(ctl.highlightRole)),
         ];
       case EditorTool.eraser:
-        return [Text(l.eraserHint)];
+        return [
+          SegmentedButton<EraserMode>(
+            segments: [
+              ButtonSegment(value: EraserMode.stroke, label: Text(l.eraseStroke)),
+              ButtonSegment(value: EraserMode.precise, label: Text(l.erasePrecise)),
+            ],
+            selected: {ctl.eraserMode},
+            onSelectionChanged: (s) => ctl.update(() => ctl.eraserMode = s.first),
+          ),
+          const SizedBox(width: 8),
+          widths([(6, l.widthFine), (10, l.widthMedium), (20, l.widthThick)],
+              ctl.eraserRadius, (w) => ctl.eraserRadius = w, palette.ink),
+          const SizedBox(width: 8),
+          FilterChip(
+            label: Text(l.eraseHighlightsOnly),
+            selected: ctl.eraseHighlightsOnly,
+            onSelected: (v) => ctl.update(() => ctl.eraseHighlightsOnly = v),
+          ),
+        ];
+      case EditorTool.lasso:
+        return [
+          Text(l.lassoHint),
+          if (onPaste != null) ...[
+            const SizedBox(width: 8),
+            OutlinedButton.icon(
+              onPressed: onPaste,
+              icon: const Icon(Icons.content_paste),
+              label: Text(l.paste),
+            ),
+          ],
+        ];
+      case EditorTool.laser:
+        return [Text(l.laserHint)];
       case EditorTool.hand:
         return [Text(l.handHint)];
     }
+  }
+}
+
+class _PenTypeMenu extends StatelessWidget {
+  const _PenTypeMenu({required this.controller});
+  final EditorController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final ctl = controller;
+    String label(PenType p) => switch (p) {
+          PenType.ball => l.penBall,
+          PenType.fountain => l.penFountain,
+          PenType.brush => l.penBrush,
+          PenType.shape => l.toolShapes,
+        };
+    IconData icon(PenType p) => switch (p) {
+          PenType.ball => Icons.create_outlined,
+          PenType.fountain => Icons.history_edu,
+          PenType.brush => Icons.brush_outlined,
+          PenType.shape => Icons.category_outlined,
+        };
+    return PopupMenuButton<PenType>(
+      tooltip: l.penType(label(ctl.penType)),
+      onSelected: (p) => ctl.update(() => ctl.penType = p),
+      itemBuilder: (_) => [
+        for (final p in const [PenType.fountain, PenType.ball, PenType.brush])
+          CheckedPopupMenuItem(value: p, checked: ctl.penType == p, child: Text(label(p))),
+      ],
+      child: Container(
+        height: 40,
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          Icon(icon(ctl.penType), size: 20),
+          const SizedBox(width: 6),
+          Text(label(ctl.penType)),
+          const Icon(Icons.arrow_drop_down),
+        ]),
+      ),
+    );
   }
 }
 
@@ -239,36 +337,40 @@ class _WidthChip extends StatelessWidget {
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) => Semantics(
-        button: true,
-        selected: selected,
-        label: label,
-        excludeSemantics: true,
-        child: Tooltip(
-          message: label,
-          child: InkResponse(
-            onTap: onTap,
-            radius: 26,
+  Widget build(BuildContext context) {
+    final h = width.clamp(2.0, 14.0) * 1.6;
+    return Semantics(
+      button: true,
+      selected: selected,
+      label: label,
+      excludeSemantics: true,
+      child: Tooltip(
+        message: label,
+        child: InkResponse(
+          onTap: onTap,
+          radius: 26,
+          child: Container(
+            width: 48,
+            height: 48,
+            alignment: Alignment.center,
+            decoration: selected
+                ? BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                        color: Theme.of(context).colorScheme.onSurface, width: 2),
+                  )
+                : null,
             child: Container(
-              width: 48,
-              height: 48,
-              alignment: Alignment.center,
-              decoration: selected
-                  ? BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: color, width: 2),
-                    )
-                  : null,
-              child: Container(
-                width: 22,
-                height: width * 2,
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(width),
-                ),
+              width: 22,
+              height: h,
+              decoration: BoxDecoration(
+                color: color,
+                borderRadius: BorderRadius.circular(h / 2),
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
+  }
 }
