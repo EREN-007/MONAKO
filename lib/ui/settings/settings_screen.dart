@@ -10,6 +10,9 @@ import '../../services/auth_service.dart';
 import '../../services/export_service.dart';
 import '../auth/auth_screen.dart';
 import '../onboarding/onboarding_screen.dart';
+import '../../core/profiles/visual_profile.dart';
+import '../../services/profile_controller.dart';
+import '../profiles/calibration_screen.dart';
 import '../profiles/profiles_screen.dart';
 import '../widgets/profile_names.dart';
 import 'legal_texts.dart';
@@ -68,6 +71,17 @@ class SettingsScreen extends StatelessWidget {
                         DropdownMenuItem(value: p.id, child: Text(profileDisplayName(context, p))),
                     ],
                   ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.tune),
+                  title: Text(l.calibrateMyVision),
+                  subtitle: Text(l.calibrateMyVisionHelp),
+                  onTap: () async {
+                    final pc = context.read<ProfileController>();
+                    final p = await Navigator.push<VisualProfile>(context,
+                        MaterialPageRoute(builder: (_) => const CalibrationScreen()));
+                    if (p != null) await pc.setActive(p.id);
+                  },
                 ),
                 ListTile(
                   leading: const Icon(Icons.quiz_outlined),

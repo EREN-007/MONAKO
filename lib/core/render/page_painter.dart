@@ -15,11 +15,15 @@ class PageBackgroundPainter extends CustomPainter {
     required this.palette,
     required this.template,
     this.image,
+    this.lineWidth = 1,
   });
 
   final ResolvedPalette palette;
   final PageTemplate template;
   final ui.Image? image;
+
+  /// Épaisseur des lignes du gabarit (plus épaisse pour les petits aperçus).
+  final double lineWidth;
 
   static const spacing = 32.0;
 
@@ -39,7 +43,7 @@ class PageBackgroundPainter extends CustomPainter {
     }
     final line = Paint()
       ..color = palette[InkRole.paperLine]
-      ..strokeWidth = 1;
+      ..strokeWidth = lineWidth;
     switch (template) {
       case PageTemplate.blank:
         break;
@@ -57,7 +61,7 @@ class PageBackgroundPainter extends CustomPainter {
         final top = spacing * 3, bottom = size.height - size.height * 0.2;
         final thick = Paint()
           ..color = palette[InkRole.paperLine]
-          ..strokeWidth = 2;
+          ..strokeWidth = 2 * lineWidth;
         canvas.drawLine(Offset(spacing, top), Offset(size.width - spacing, top), thick);
         canvas.drawLine(Offset(size.width * 0.3, top), Offset(size.width * 0.3, bottom), thick);
         canvas.drawLine(Offset(spacing, bottom), Offset(size.width - spacing, bottom), thick);
@@ -75,7 +79,7 @@ class PageBackgroundPainter extends CustomPainter {
         final dot = Paint()..color = palette[InkRole.paperLine];
         for (var y = spacing; y < size.height; y += spacing) {
           for (var x = spacing; x < size.width; x += spacing) {
-            canvas.drawCircle(Offset(x, y), 1.6, dot);
+            canvas.drawCircle(Offset(x, y), 1.6 * lineWidth, dot);
           }
         }
     }
@@ -83,7 +87,10 @@ class PageBackgroundPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(PageBackgroundPainter old) =>
-      old.palette != palette || old.template != template || old.image != image;
+      old.palette != palette ||
+      old.template != template ||
+      old.image != image ||
+      old.lineWidth != lineWidth;
 }
 
 /// Encre et surlignages. Chaque trait est dessiné avec la couleur de la

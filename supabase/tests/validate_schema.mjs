@@ -23,8 +23,11 @@ await db.exec(`
     $$ select (string_to_array(name, '/'))[1:array_length(string_to_array(name, '/'), 1) - 1] $$;
   create publication supabase_realtime;
 `);
-await db.exec(fs.readFileSync(new URL("../migrations/20261025000000_monako_schema.sql", import.meta.url), 'utf8'));
-console.log('ok: migration appliquée');
+const dir = new URL('../migrations/', import.meta.url);
+for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.sql')).sort()) {
+  await db.exec(fs.readFileSync(new URL(f, dir), 'utf8'));
+  console.log('ok: migration appliquée:', f);
+}
 await db.exec(`grant usage on schema public, auth, storage to authenticated;
   grant all on all tables in schema public to authenticated;
   grant select on auth.users to authenticated;
@@ -117,6 +120,29 @@ ok(r.rows.length === 0, 'stockage: C ne voit rien');
 err = null;
 await as(C, async () => { try { await q(`insert into storage.objects (bucket_id, name) values ('assets', $1)`, [`${C}/${NB}/y.pdf`]); } catch (e) { err = e; } });
 ok(err !== null, 'stockage: C ne peut pas déposer dans le cahier de A');
+
+// v2: favoris, corbeille, gabarits, types de stylo, images sur page
+await as(A, () => q(`update notebooks set favorite = true, trashed_at = now(), kind = 'whiteboard', modified_at = '2026-06-01' where id = $1`, [NB]));
+r = await q(`select favorite, kind, trashed_at is not null as trashed from notebooks where id = $1`, [NB]);
+ok(r.rows[0].favorite && r.rows[0].kind === 'whiteboard' && r.rows[0].trashed, 'v2: favori, type et corbeille');
+await as(A, () => q(`update pages set template = 'cornell', bookmarked = true, outline_title = 'Intro', modified_at = '2026-06-01' where id = $1`, [PG]));
+r = await q(`select template, bookmarked, outline_title from pages where id = $1`, [PG]);
+ok(r.rows[0].template === 'cornell' && r.rows[0].bookmarked && r.rows[0].outline_title === 'Intro', 'v2: gabarit Cornell, signet et plan');
+err = null;
+await as(A, async () => { try { await q(`insert into strokes (id, notebook_id, page_id, role, pen, modified_at) values (gen_random_uuid(),$1,$2,'ink.primary','pencil','2026-01-01')`, [NB, PG]); } catch (e) { err = e; } });
+ok(err !== null, 'v2: type de stylo inconnu refusé');
+const IMG = 'dddddddd-0000-0000-0000-000000000001', AS = 'eeeeeeee-0000-0000-0000-000000000001';
+await as(A, async () => {
+  await q(`insert into imported_assets (id, notebook_id, kind, file_name, modified_at) values ($1,$2,'image','photo.png','2026-01-01')`, [AS, NB]);
+  await q(`insert into page_images (id, notebook_id, page_id, asset_id, x, y, width, height, modified_at) values ($1,$2,$3,$4,10,10,200,100,'2026-01-01')`, [IMG, NB, PG, AS]);
+});
+r = await as(B, () => q(`select * from page_images`));
+ok(r.rows.length === 1, 'v2: image visible pour le cahier partagé');
+r = await as(C, () => q(`select * from page_images`));
+ok(r.rows.length === 0, 'v2: image invisible hors partage (RLS)');
+await as(A, () => q(`update page_images set page_id = gen_random_uuid(), x = 50, modified_at = '2026-02-01' where id = $1`, [IMG]));
+r = await q(`select page_id, x from page_images where id = $1`, [IMG]);
+ok(r.rows[0].page_id === PG && r.rows[0].x === 50, 'v2: une image garde sa page');
 
 // Révocation
 await as(A, () => q(`select unshare_notebook($1, $2)`, [NB, B]));

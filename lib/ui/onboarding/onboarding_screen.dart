@@ -9,7 +9,9 @@ import '../../data/repository.dart';
 import '../../l10n/app_localizations.dart';
 import '../../services/auth_service.dart';
 import '../../services/profile_controller.dart';
+import '../../core/color/contrast.dart';
 import '../auth/auth_screen.dart';
+import '../profiles/calibration_screen.dart';
 import '../settings/legal_texts.dart';
 import '../widgets/monako_logo.dart';
 import '../widgets/profile_names.dart';
@@ -90,13 +92,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         VisionNeed.e => Presets.e,
       };
 
-  Future<void> _finish() async {
+  Future<void> _finish({VisualProfile? calibrated}) async {
     final repo = context.read<NotesRepository>();
     final pc = context.read<ProfileController>();
     final auth = context.read<AuthService>();
     final suggestions = _suggestions(context);
-    final suggestion = suggestions.firstWhere(
-        (p) => p.id == _chosen, orElse: () => suggestions.first);
+    final suggestion = calibrated ??
+        suggestions.firstWhere((p) => p.id == _chosen, orElse: () => suggestions.first);
     // Proposer le compte avant d'entrer dans la bibliothèque.
     if (auth.configured && !auth.signedIn) {
       await Navigator.push(context,
@@ -106,11 +108,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       if (repo.settings.onboardingDone) return;
     }
     var chosen = suggestion;
-    if (!Presets.all.any((p) => p.id == suggestion.id)) {
+    if (calibrated == null && !Presets.all.any((p) => p.id == suggestion.id)) {
       chosen = await repo.saveProfile(suggestion.copyWith(id: 'prof_${newId()}'));
     }
     // Profil de secours: toujours un profil prédéfini (lisible).
-    final rescue = chosen.isPreset ? chosen.id : (chosen.baseId ?? Presets.a1Id);
+    final rescue = chosen.isPreset
+        ? chosen.id
+        : (chosen.baseId ?? (isDarkColor(chosen.paper) ? Presets.a1Id : Presets.a2Id));
     await repo.updateSettings(repo.settings.copyWith(
       onboardingDone: true,
       consentAt: nowUtc(),
@@ -387,6 +391,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           const SizedBox(height: 12),
         ],
         Text(l.changeLaterHint, style: Theme.of(context).textTheme.bodySmall),
+        const SizedBox(height: 16),
+        OutlinedButton.icon(
+          style: OutlinedButton.styleFrom(minimumSize: const Size(0, 56)),
+          onPressed: () async {
+            final p = await Navigator.push<VisualProfile>(context,
+                MaterialPageRoute(builder: (_) => const CalibrationScreen()));
+            if (p != null && mounted) await _finish(calibrated: p);
+          },
+          icon: const Icon(Icons.tune),
+          label: Text(l.calibrateMyVision),
+        ),
       ],
     );
   }

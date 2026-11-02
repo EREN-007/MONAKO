@@ -94,7 +94,8 @@ class TemplatePreview extends StatelessWidget {
           child: SizedBox.fromSize(
             size: size,
             child: CustomPaint(
-              painter: PageBackgroundPainter(palette: palette, template: template),
+              painter: PageBackgroundPainter(
+                  palette: palette, template: template, lineWidth: 6),
             ),
           ),
         ),

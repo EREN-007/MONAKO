@@ -1272,4 +1272,104 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deleteForever => 'Supprimer définitivement';
+
+  @override
+  String get calibrateMyVision => 'Calibrer ma vue (test guidé)';
+
+  @override
+  String get calibrateMyVisionHelp =>
+      'Comparez des échantillons : Monako calcule un profil sur mesure.';
+
+  @override
+  String get calibrationTitle => 'Calibrer ma vue';
+
+  @override
+  String get myCalibratedProfile => 'Mon profil sur mesure';
+
+  @override
+  String get saveAndUse => 'Enregistrer et utiliser';
+
+  @override
+  String get calibrationSample =>
+      'Lisez cette phrase quelques secondes. Est-ce reposant ?';
+
+  @override
+  String get calBackgroundTitle => 'Quel fond repose le plus vos yeux ?';
+
+  @override
+  String get calBackgroundHelp =>
+      'Regardez chaque échantillon quelques secondes, puis touchez celui qui éblouit le moins.';
+
+  @override
+  String get calContrastTitle => 'Quel contraste vous convient ?';
+
+  @override
+  String get calContrastHelp =>
+      'Le plus fort n’est pas toujours le meilleur : choisissez celui qui reste confortable longtemps.';
+
+  @override
+  String get calSoft => 'Doux : texte calme, peu d’éblouissement.';
+
+  @override
+  String get calMedium => 'Moyen : bon équilibre pour lire longtemps.';
+
+  @override
+  String get calStrong => 'Fort : les lettres ressortent nettement.';
+
+  @override
+  String get calVeryStrong => 'Très fort : contraste maximal sans blanc pur.';
+
+  @override
+  String get calSizeTitle => 'Quelle taille lisez-vous sans effort ?';
+
+  @override
+  String get calSizeHelp =>
+      'Touchez la plus petite ligne que vous lisez sans plisser les yeux. Monako ajoute une petite marge de confort.';
+
+  @override
+  String get calSizeSample => 'La cellule est l’unité du vivant.';
+
+  @override
+  String get calColorsTitle => 'Ces couleurs sont-elles bien différentes ?';
+
+  @override
+  String get calColorsHelp =>
+      'Regardez les quatre bandes. Aucune bonne ou mauvaise réponse.';
+
+  @override
+  String get calColorsDistinct => 'Oui, je les distingue facilement';
+
+  @override
+  String get calColorsConfused => 'Pas vraiment, certaines se ressemblent';
+
+  @override
+  String get calSpacingTitle => 'Quel espacement aide votre lecture ?';
+
+  @override
+  String get calSpacingHelp =>
+      'Plus d’espace entre les lignes et les mots réduit les halos et les lignes qui se chevauchent.';
+
+  @override
+  String get calSpacingSample =>
+      'Les lignes et les mots ont plus ou moins d’espace entre eux. Lequel est le plus reposant ?';
+
+  @override
+  String get calFontTitle => 'Police';
+
+  @override
+  String get calFontSample => 'Bonjour ! Lisez ces quelques mots.';
+
+  @override
+  String get calWarmthTitle => 'Une teinte plus chaude ?';
+
+  @override
+  String get calWarmthHelp =>
+      'Réduire le bleu adoucit l’écran, surtout le soir. Glissez jusqu’à ce que ce soit confortable.';
+
+  @override
+  String get calResultTitle => 'Votre profil sur mesure';
+
+  @override
+  String get calResultHelp =>
+      'Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.';
 }

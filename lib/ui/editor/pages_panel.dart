@@ -278,7 +278,9 @@ class _PageThumbnailState extends State<PageThumbnail> {
               child: asset == null
                   ? CustomPaint(
                       painter: PageBackgroundPainter(
-                          palette: widget.palette, template: page.template))
+                          palette: widget.palette,
+                          template: page.template,
+                          lineWidth: 3))
                   : PdfLayer(
                       asset: asset,
                       page: page,

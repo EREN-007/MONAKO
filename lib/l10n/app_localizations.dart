@@ -2365,6 +2365,186 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Supprimer définitivement'**
   String get deleteForever;
+
+  /// No description provided for @calibrateMyVision.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calibrer ma vue (test guidé)'**
+  String get calibrateMyVision;
+
+  /// No description provided for @calibrateMyVisionHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Comparez des échantillons : Monako calcule un profil sur mesure.'**
+  String get calibrateMyVisionHelp;
+
+  /// No description provided for @calibrationTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Calibrer ma vue'**
+  String get calibrationTitle;
+
+  /// No description provided for @myCalibratedProfile.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mon profil sur mesure'**
+  String get myCalibratedProfile;
+
+  /// No description provided for @saveAndUse.
+  ///
+  /// In fr, this message translates to:
+  /// **'Enregistrer et utiliser'**
+  String get saveAndUse;
+
+  /// No description provided for @calibrationSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lisez cette phrase quelques secondes. Est-ce reposant ?'**
+  String get calibrationSample;
+
+  /// No description provided for @calBackgroundTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel fond repose le plus vos yeux ?'**
+  String get calBackgroundTitle;
+
+  /// No description provided for @calBackgroundHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Regardez chaque échantillon quelques secondes, puis touchez celui qui éblouit le moins.'**
+  String get calBackgroundHelp;
+
+  /// No description provided for @calContrastTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel contraste vous convient ?'**
+  String get calContrastTitle;
+
+  /// No description provided for @calContrastHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Le plus fort n’est pas toujours le meilleur : choisissez celui qui reste confortable longtemps.'**
+  String get calContrastHelp;
+
+  /// No description provided for @calSoft.
+  ///
+  /// In fr, this message translates to:
+  /// **'Doux : texte calme, peu d’éblouissement.'**
+  String get calSoft;
+
+  /// No description provided for @calMedium.
+  ///
+  /// In fr, this message translates to:
+  /// **'Moyen : bon équilibre pour lire longtemps.'**
+  String get calMedium;
+
+  /// No description provided for @calStrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fort : les lettres ressortent nettement.'**
+  String get calStrong;
+
+  /// No description provided for @calVeryStrong.
+  ///
+  /// In fr, this message translates to:
+  /// **'Très fort : contraste maximal sans blanc pur.'**
+  String get calVeryStrong;
+
+  /// No description provided for @calSizeTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quelle taille lisez-vous sans effort ?'**
+  String get calSizeTitle;
+
+  /// No description provided for @calSizeHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez la plus petite ligne que vous lisez sans plisser les yeux. Monako ajoute une petite marge de confort.'**
+  String get calSizeHelp;
+
+  /// No description provided for @calSizeSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'La cellule est l’unité du vivant.'**
+  String get calSizeSample;
+
+  /// No description provided for @calColorsTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ces couleurs sont-elles bien différentes ?'**
+  String get calColorsTitle;
+
+  /// No description provided for @calColorsHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Regardez les quatre bandes. Aucune bonne ou mauvaise réponse.'**
+  String get calColorsHelp;
+
+  /// No description provided for @calColorsDistinct.
+  ///
+  /// In fr, this message translates to:
+  /// **'Oui, je les distingue facilement'**
+  String get calColorsDistinct;
+
+  /// No description provided for @calColorsConfused.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pas vraiment, certaines se ressemblent'**
+  String get calColorsConfused;
+
+  /// No description provided for @calSpacingTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Quel espacement aide votre lecture ?'**
+  String get calSpacingTitle;
+
+  /// No description provided for @calSpacingHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plus d’espace entre les lignes et les mots réduit les halos et les lignes qui se chevauchent.'**
+  String get calSpacingHelp;
+
+  /// No description provided for @calSpacingSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Les lignes et les mots ont plus ou moins d’espace entre eux. Lequel est le plus reposant ?'**
+  String get calSpacingSample;
+
+  /// No description provided for @calFontTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Police'**
+  String get calFontTitle;
+
+  /// No description provided for @calFontSample.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bonjour ! Lisez ces quelques mots.'**
+  String get calFontSample;
+
+  /// No description provided for @calWarmthTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Une teinte plus chaude ?'**
+  String get calWarmthTitle;
+
+  /// No description provided for @calWarmthHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Réduire le bleu adoucit l’écran, surtout le soir. Glissez jusqu’à ce que ce soit confortable.'**
+  String get calWarmthHelp;
+
+  /// No description provided for @calResultTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Votre profil sur mesure'**
+  String get calResultTitle;
+
+  /// No description provided for @calResultHelp.
+  ///
+  /// In fr, this message translates to:
+  /// **'Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.'**
+  String get calResultHelp;
 }
 
 class _AppLocalizationsDelegate
