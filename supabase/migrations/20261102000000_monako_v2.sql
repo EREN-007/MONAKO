@@ -1,5 +1,5 @@
 -- =====================================================================
--- Monako v2 — favoris, corbeille, signets et plan, types de document,
+-- Monako v2 (peut être relancé sans erreur) — favoris, corbeille, signets et plan, types de document,
 -- types de stylo, nouveaux gabarits, images posées sur une page.
 -- =====================================================================
 
@@ -43,12 +43,17 @@ create table if not exists public.page_images (
 create index if not exists page_images_sync_idx on public.page_images (server_updated_at, id);
 create index if not exists page_images_page_idx on public.page_images (page_id);
 
+drop trigger if exists page_images_sync_guard on public.page_images;
+drop trigger if exists page_images_keep_parent on public.page_images;
 create trigger page_images_sync_guard before insert or update on public.page_images
   for each row execute function public.monako_sync_guard();
 create trigger page_images_keep_parent before update on public.page_images
   for each row execute function public.monako_keep_parent();
 
 alter table public.page_images enable row level security;
+drop policy if exists "read page_images" on public.page_images;
+drop policy if exists "insert page_images" on public.page_images;
+drop policy if exists "update page_images" on public.page_images;
 create policy "read page_images" on public.page_images for select
   using (notebook_id in (select public.my_notebook_ids()));
 create policy "insert page_images" on public.page_images for insert
@@ -71,4 +76,13 @@ begin
 end;
 $$;
 
-alter publication supabase_realtime add table public.page_images;
+do $$
+begin
+  if not exists (
+    select 1 from pg_publication_tables
+    where pubname = 'supabase_realtime' and schemaname = 'public' and tablename = 'page_images'
+  ) then
+    alter publication supabase_realtime add table public.page_images;
+  end if;
+end;
+$$;

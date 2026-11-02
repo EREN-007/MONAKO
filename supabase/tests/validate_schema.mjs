@@ -28,6 +28,9 @@ for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.sql')).sort()) {
   await db.exec(fs.readFileSync(new URL(f, dir), 'utf8'));
   console.log('ok: migration appliquée:', f);
 }
+// La migration v2 peut être relancée sans erreur.
+await db.exec(fs.readFileSync(new URL('20261102000000_monako_v2.sql', dir), 'utf8'));
+console.log('ok: migration v2 relancée sans erreur');
 await db.exec(`grant usage on schema public, auth, storage to authenticated;
   grant all on all tables in schema public to authenticated;
   grant select on auth.users to authenticated;
