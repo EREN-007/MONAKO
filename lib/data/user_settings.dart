@@ -19,6 +19,7 @@ class UserSettings {
     this.eveningWarmth = false,
     this.pauseReminder = false,
     this.fingerDrawing = true,
+    this.scrollHorizontal = false,
     this.modifiedAt,
   });
 
@@ -50,6 +51,9 @@ class UserSettings {
 
   /// Dessiner au doigt (sinon: stylet/souris dessinent, doigt défile).
   final bool fingerDrawing;
+
+  /// Défilement des pages: vertical continu (par défaut) ou horizontal.
+  final bool scrollHorizontal;
   final DateTime? modifiedAt;
 
   UserSettings copyWith({
@@ -67,6 +71,7 @@ class UserSettings {
     bool? eveningWarmth,
     bool? pauseReminder,
     bool? fingerDrawing,
+    bool? scrollHorizontal,
   }) =>
       UserSettings(
         activeProfileId: activeProfileId ?? this.activeProfileId,
@@ -82,6 +87,7 @@ class UserSettings {
         eveningWarmth: eveningWarmth ?? this.eveningWarmth,
         pauseReminder: pauseReminder ?? this.pauseReminder,
         fingerDrawing: fingerDrawing ?? this.fingerDrawing,
+        scrollHorizontal: scrollHorizontal ?? this.scrollHorizontal,
         modifiedAt: nowUtc(),
       );
 
@@ -100,6 +106,7 @@ class UserSettings {
           'eveningWarmth': eveningWarmth,
           'pauseReminder': pauseReminder,
           'fingerDrawing': fingerDrawing,
+          'scrollHorizontal': scrollHorizontal,
         },
         'modified_at': timeToJson(modifiedAt ?? nowUtc()),
       };
@@ -120,6 +127,7 @@ class UserSettings {
       eveningWarmth: p['eveningWarmth'] == true,
       pauseReminder: p['pauseReminder'] == true,
       fingerDrawing: p['fingerDrawing'] != false,
+      scrollHorizontal: p['scrollHorizontal'] == true,
       modifiedAt: r['modified_at'] == null ? null : parseTime(r['modified_at']),
     );
   }

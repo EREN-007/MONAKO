@@ -1035,4 +1035,169 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get accessibilityText =>
       'Accessibility statement\n\nMonako aims to conform to the Web Content Accessibility Guidelines (WCAG) 2.2, level AA, across its interface.\n\nWhat the app offers:\n• The whole interface is recoloured by your profile: never forced pure white or pure black.\n• Touch targets of at least 44 pt / 48 dp.\n• VoiceOver (iOS) and TalkBack (Android) support: every button has a name.\n• Respects the system text size.\n• No flashing; fades of 200 ms at most.\n• No information conveyed by colour alone: each ink has a number, a pattern or an icon.\n• Interface in French and English.\n• Rescue gesture: a triple tap restores a readable profile.\n\nKnown limitations:\n• A poor-quality scanned PDF without recognised text only gets the colour filter.\n• Charts with colour legends may lose meaning after recolouring: use “See the original”.\n\nReport a problem: write to us from the app\'s store page. We reply within 10 business days.';
+
+  @override
+  String get library => 'Library';
+
+  @override
+  String get pagesPanel => 'Pages panel';
+
+  @override
+  String get pages => 'Pages';
+
+  @override
+  String get outline => 'Outline';
+
+  @override
+  String get bookmarks => 'Bookmarks';
+
+  @override
+  String get outlineEmpty =>
+      'No pages in the outline. Page menu › “Add to outline”.';
+
+  @override
+  String get bookmarksEmpty => 'No bookmarks. Page menu › “Add bookmark”.';
+
+  @override
+  String get pageMenu => 'Page menu';
+
+  @override
+  String pageNumber(int n) {
+    return 'Page $n';
+  }
+
+  @override
+  String get searchInDocument => 'Search in document';
+
+  @override
+  String get shareAndExport => 'Share and export';
+
+  @override
+  String get closeTab => 'Close tab';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get cut => 'Cut';
+
+  @override
+  String get paste => 'Paste';
+
+  @override
+  String get duplicate => 'Duplicate';
+
+  @override
+  String get changeInk => 'Change ink';
+
+  @override
+  String get toolLasso => 'Lasso';
+
+  @override
+  String get toolShapes => 'Shapes';
+
+  @override
+  String get toolLaser => 'Laser pointer';
+
+  @override
+  String get insertImage => 'Insert image';
+
+  @override
+  String get penBall => 'Ballpoint';
+
+  @override
+  String get penFountain => 'Fountain pen';
+
+  @override
+  String get penBrush => 'Brush';
+
+  @override
+  String penType(String name) {
+    return 'Pen type: $name';
+  }
+
+  @override
+  String get holdToShape => 'Tip: draw and hold for a perfect shape.';
+
+  @override
+  String get shapesHint => 'Draw a line, rectangle, circle or triangle.';
+
+  @override
+  String get textHint => 'Tap the page to type text.';
+
+  @override
+  String get eraseStroke => 'Whole stroke';
+
+  @override
+  String get erasePrecise => 'Precise';
+
+  @override
+  String get eraseHighlightsOnly => 'Highlights only';
+
+  @override
+  String get lassoHint => 'Circle items to move, resize or copy them.';
+
+  @override
+  String get laserHint => 'Point without writing: the trail fades away.';
+
+  @override
+  String get addBookmark => 'Add bookmark';
+
+  @override
+  String get removeBookmark => 'Remove bookmark';
+
+  @override
+  String get addToOutline => 'Add to outline';
+
+  @override
+  String get renameInOutline => 'Rename in outline';
+
+  @override
+  String get outlineTitle => 'Outline title';
+
+  @override
+  String get duplicatePage => 'Duplicate page';
+
+  @override
+  String get changeTemplate => 'Change template';
+
+  @override
+  String get goToPage => 'Go to page';
+
+  @override
+  String get scrollHorizontal => 'Horizontal scrolling';
+
+  @override
+  String get clearPage => 'Clear page';
+
+  @override
+  String get clearPageConfirm =>
+      'Erase everything written on this page? (You can still undo.)';
+
+  @override
+  String get insertBefore => 'Before';
+
+  @override
+  String get insertAfter => 'After';
+
+  @override
+  String get insertLast => 'Last page';
+
+  @override
+  String get portrait => 'Portrait';
+
+  @override
+  String get landscape => 'Landscape';
+
+  @override
+  String get templates => 'Templates';
+
+  @override
+  String get templateNarrow => 'Narrow ruled';
+
+  @override
+  String get templateCornell => 'Cornell';
+
+  @override
+  String get imagePage => 'Page from an image';
 }

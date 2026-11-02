@@ -127,8 +127,21 @@ class ExportService {
       ..setStrokeColor(_pdfColor(palette[InkRole.paperLine]))
       ..setLineWidth(0.8);
     switch (page.template) {
+      case PageTemplate.cornell:
+        for (final (x1, y1, x2, y2) in [
+          (s, s * 3, size.x - s, s * 3),
+          (size.x * 0.3, s * 3, size.x * 0.3, h * 0.8),
+          (s, h * 0.8, size.x - s, h * 0.8),
+        ]) {
+          canvas
+            ..moveTo(x1, h - y1)
+            ..lineTo(x2, h - y2);
+        }
+        canvas.strokePath();
       case PageTemplate.lined:
-        for (var y = s * 3; y < h - s; y += s) {
+      case PageTemplate.narrow:
+        final step = page.template == PageTemplate.narrow ? 24.0 : s;
+        for (var y = s * 3; y < h - s; y += step) {
           canvas
             ..moveTo(s, h - y)
             ..lineTo(size.x - s, h - y);
@@ -183,7 +196,10 @@ class ExportService {
       return getStroke(
         pts,
         options: StrokeGeometryCache.options(s.width * widthMultiplier,
-            highlight: s.highlight, complete: true, simulate: !s.hasPressure),
+            highlight: s.highlight,
+            complete: true,
+            simulate: !s.hasPressure,
+            pen: s.pen),
       );
     }
 

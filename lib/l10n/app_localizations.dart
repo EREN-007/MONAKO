@@ -1951,6 +1951,324 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Déclaration d’accessibilité\n\nMonako vise la conformité aux Règles pour l’accessibilité des contenus Web (WCAG) 2.2, niveau AA, pour toute son interface.\n\nCe que l’app offre :\n• Toute l’interface est recolorée par votre profil : jamais de blanc ni de noir purs imposés.\n• Cibles tactiles d’au moins 44 pt / 48 dp.\n• Compatibilité VoiceOver (iOS) et TalkBack (Android) : chaque bouton a un nom.\n• Respect de la taille de texte du système.\n• Aucun clignotement ; fondus de 200 ms au maximum.\n• Aucune information portée par la couleur seule : chaque encre a un numéro, un motif ou une icône.\n• Interface en français et en anglais.\n• Geste de secours : un triple toucher rétablit un profil lisible.\n\nLimites connues :\n• Un PDF scanné de mauvaise qualité sans texte reconnu n’a que le filtre de couleur.\n• Les graphiques avec légendes colorées peuvent perdre en sens après recoloration : utilisez « Voir l’original ».\n\nSignaler un problème : écrivez-nous depuis la fiche de l’app. Nous répondons dans un délai de 10 jours ouvrables.'**
   String get accessibilityText;
+
+  /// No description provided for @library.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bibliothèque'**
+  String get library;
+
+  /// No description provided for @pagesPanel.
+  ///
+  /// In fr, this message translates to:
+  /// **'Panneau des pages'**
+  String get pagesPanel;
+
+  /// No description provided for @pages.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pages'**
+  String get pages;
+
+  /// No description provided for @outline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plan'**
+  String get outline;
+
+  /// No description provided for @bookmarks.
+  ///
+  /// In fr, this message translates to:
+  /// **'Signets'**
+  String get bookmarks;
+
+  /// No description provided for @outlineEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucune page dans le plan. Menu d’une page › « Ajouter au plan ».'**
+  String get outlineEmpty;
+
+  /// No description provided for @bookmarksEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun signet. Menu d’une page › « Ajouter aux signets ».'**
+  String get bookmarksEmpty;
+
+  /// No description provided for @pageMenu.
+  ///
+  /// In fr, this message translates to:
+  /// **'Menu de la page'**
+  String get pageMenu;
+
+  /// No description provided for @pageNumber.
+  ///
+  /// In fr, this message translates to:
+  /// **'Page {n}'**
+  String pageNumber(int n);
+
+  /// No description provided for @searchInDocument.
+  ///
+  /// In fr, this message translates to:
+  /// **'Rechercher dans le document'**
+  String get searchInDocument;
+
+  /// No description provided for @shareAndExport.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partager et exporter'**
+  String get shareAndExport;
+
+  /// No description provided for @closeTab.
+  ///
+  /// In fr, this message translates to:
+  /// **'Fermer l’onglet'**
+  String get closeTab;
+
+  /// No description provided for @copy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Copier'**
+  String get copy;
+
+  /// No description provided for @cut.
+  ///
+  /// In fr, this message translates to:
+  /// **'Couper'**
+  String get cut;
+
+  /// No description provided for @paste.
+  ///
+  /// In fr, this message translates to:
+  /// **'Coller'**
+  String get paste;
+
+  /// No description provided for @duplicate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer'**
+  String get duplicate;
+
+  /// No description provided for @changeInk.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer l’encre'**
+  String get changeInk;
+
+  /// No description provided for @toolLasso.
+  ///
+  /// In fr, this message translates to:
+  /// **'Lasso'**
+  String get toolLasso;
+
+  /// No description provided for @toolShapes.
+  ///
+  /// In fr, this message translates to:
+  /// **'Formes'**
+  String get toolShapes;
+
+  /// No description provided for @toolLaser.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pointeur laser'**
+  String get toolLaser;
+
+  /// No description provided for @insertImage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Insérer une image'**
+  String get insertImage;
+
+  /// No description provided for @penBall.
+  ///
+  /// In fr, this message translates to:
+  /// **'Bille'**
+  String get penBall;
+
+  /// No description provided for @penFountain.
+  ///
+  /// In fr, this message translates to:
+  /// **'Plume'**
+  String get penFountain;
+
+  /// No description provided for @penBrush.
+  ///
+  /// In fr, this message translates to:
+  /// **'Pinceau'**
+  String get penBrush;
+
+  /// No description provided for @penType.
+  ///
+  /// In fr, this message translates to:
+  /// **'Type de stylo : {name}'**
+  String penType(String name);
+
+  /// No description provided for @holdToShape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Astuce : dessinez puis maintenez pour une forme parfaite.'**
+  String get holdToShape;
+
+  /// No description provided for @shapesHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dessinez une ligne, un rectangle, un cercle ou un triangle.'**
+  String get shapesHint;
+
+  /// No description provided for @textHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez la page pour écrire du texte.'**
+  String get textHint;
+
+  /// No description provided for @eraseStroke.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trait entier'**
+  String get eraseStroke;
+
+  /// No description provided for @erasePrecise.
+  ///
+  /// In fr, this message translates to:
+  /// **'Précise'**
+  String get erasePrecise;
+
+  /// No description provided for @eraseHighlightsOnly.
+  ///
+  /// In fr, this message translates to:
+  /// **'Surlignages seulement'**
+  String get eraseHighlightsOnly;
+
+  /// No description provided for @lassoHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Entourez des éléments pour les déplacer, redimensionner ou copier.'**
+  String get lassoHint;
+
+  /// No description provided for @laserHint.
+  ///
+  /// In fr, this message translates to:
+  /// **'Montrez sans écrire : la trace s’efface d’elle-même.'**
+  String get laserHint;
+
+  /// No description provided for @addBookmark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux signets'**
+  String get addBookmark;
+
+  /// No description provided for @removeBookmark.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des signets'**
+  String get removeBookmark;
+
+  /// No description provided for @addToOutline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter au plan'**
+  String get addToOutline;
+
+  /// No description provided for @renameInOutline.
+  ///
+  /// In fr, this message translates to:
+  /// **'Renommer dans le plan'**
+  String get renameInOutline;
+
+  /// No description provided for @outlineTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Titre dans le plan'**
+  String get outlineTitle;
+
+  /// No description provided for @duplicatePage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Dupliquer la page'**
+  String get duplicatePage;
+
+  /// No description provided for @changeTemplate.
+  ///
+  /// In fr, this message translates to:
+  /// **'Changer le gabarit'**
+  String get changeTemplate;
+
+  /// No description provided for @goToPage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aller à la page'**
+  String get goToPage;
+
+  /// No description provided for @scrollHorizontal.
+  ///
+  /// In fr, this message translates to:
+  /// **'Défilement horizontal'**
+  String get scrollHorizontal;
+
+  /// No description provided for @clearPage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer la page'**
+  String get clearPage;
+
+  /// No description provided for @clearPageConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Effacer tout ce qui est écrit sur cette page ? (Annuler reste possible.)'**
+  String get clearPageConfirm;
+
+  /// No description provided for @insertBefore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Avant'**
+  String get insertBefore;
+
+  /// No description provided for @insertAfter.
+  ///
+  /// In fr, this message translates to:
+  /// **'Après'**
+  String get insertAfter;
+
+  /// No description provided for @insertLast.
+  ///
+  /// In fr, this message translates to:
+  /// **'À la fin'**
+  String get insertLast;
+
+  /// No description provided for @portrait.
+  ///
+  /// In fr, this message translates to:
+  /// **'Portrait'**
+  String get portrait;
+
+  /// No description provided for @landscape.
+  ///
+  /// In fr, this message translates to:
+  /// **'Paysage'**
+  String get landscape;
+
+  /// No description provided for @templates.
+  ///
+  /// In fr, this message translates to:
+  /// **'Gabarits'**
+  String get templates;
+
+  /// No description provided for @templateNarrow.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ligné étroit'**
+  String get templateNarrow;
+
+  /// No description provided for @templateCornell.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cornell'**
+  String get templateCornell;
+
+  /// No description provided for @imagePage.
+  ///
+  /// In fr, this message translates to:
+  /// **'Page à partir d’une image'**
+  String get imagePage;
 }
 
 class _AppLocalizationsDelegate

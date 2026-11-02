@@ -10,7 +10,10 @@ import '../../services/asset_renderer.dart';
 /// Import de PDF et d'images (section 10). Le fichier original est gardé
 /// tel quel; la recoloration se fait à l'affichage.
 Future<Notebook?> importDocument(BuildContext context,
-    {Notebook? into, String? folderId}) async {
+    {Notebook? into,
+    String? folderId,
+    NotePage? at,
+    PageInsert where = PageInsert.after}) async {
   final l = AppLocalizations.of(context);
   final repo = context.read<NotesRepository>();
   final messenger = ScaffoldMessenger.of(context);
@@ -34,6 +37,8 @@ Future<Notebook?> importDocument(BuildContext context,
       pageSizes: sizes,
       into: into,
       folderId: folderId,
+      at: at,
+      where: at == null ? PageInsert.last : where,
     );
     messenger
       ..hideCurrentSnackBar()

@@ -81,6 +81,20 @@ class Folder implements SyncRow {
       );
 }
 
+/// Type de document.
+enum NotebookKind {
+  notebook,
+
+  /// Tableau blanc: une grande page sans marges.
+  whiteboard,
+
+  /// Note rapide.
+  quicknote;
+
+  static NotebookKind parse(String? v) => NotebookKind.values
+      .firstWhere((k) => k.name == v, orElse: () => NotebookKind.notebook);
+}
+
 /// Cahier. Un profil peut lui être imposé ([linkedProfileId]).
 class Notebook implements SyncRow {
   Notebook({
@@ -90,12 +104,22 @@ class Notebook implements SyncRow {
     this.folderId,
     this.linkedProfileId,
     this.coverRole = 'ink.accent2',
+    this.favorite = false,
+    this.kind = NotebookKind.notebook,
+    this.trashedAt,
     DateTime? createdAt,
     DateTime? modifiedAt,
     this.deleted = false,
     this.schemaVersion = kSchemaVersion,
   })  : createdAt = createdAt ?? nowUtc(),
         modifiedAt = modifiedAt ?? nowUtc();
+
+  final bool favorite;
+  final NotebookKind kind;
+
+  /// Mis à la corbeille (restaurable); null = actif.
+  final DateTime? trashedAt;
+  bool get trashed => trashedAt != null;
 
   @override
   final String id;
@@ -122,6 +146,10 @@ class Notebook implements SyncRow {
     String? coverRole,
     bool? deleted,
     String? userId,
+    bool? favorite,
+    NotebookKind? kind,
+    DateTime? trashedAt,
+    bool restore = false,
   }) =>
       Notebook(
         id: id,
@@ -132,6 +160,9 @@ class Notebook implements SyncRow {
             ? null
             : (linkedProfileId ?? this.linkedProfileId),
         coverRole: coverRole ?? this.coverRole,
+        favorite: favorite ?? this.favorite,
+        kind: kind ?? this.kind,
+        trashedAt: restore ? null : (trashedAt ?? this.trashedAt),
         createdAt: createdAt,
         deleted: deleted ?? this.deleted,
       );
@@ -144,6 +175,9 @@ class Notebook implements SyncRow {
         'folder_id': folderId,
         'linked_profile_id': linkedProfileId,
         'cover_role': coverRole,
+        'favorite': favorite,
+        'kind': kind.name,
+        'trashed_at': trashedAt == null ? null : timeToJson(trashedAt!),
         'created_at': timeToJson(createdAt),
         'modified_at': timeToJson(modifiedAt),
         'deleted': deleted,
@@ -157,6 +191,9 @@ class Notebook implements SyncRow {
         folderId: r['folder_id'] as String?,
         linkedProfileId: r['linked_profile_id'] as String?,
         coverRole: (r['cover_role'] as String?) ?? 'ink.accent2',
+        favorite: r['favorite'] == true,
+        kind: NotebookKind.parse(r['kind'] as String?),
+        trashedAt: r['trashed_at'] == null ? null : parseTime(r['trashed_at']),
         createdAt: parseTime(r['created_at']),
         modifiedAt: parseTime(r['modified_at']),
         deleted: r['deleted'] == true,
@@ -169,8 +206,14 @@ class Notebook implements SyncRow {
 enum PageTemplate {
   blank,
   lined,
+
+  /// Ligné étroit.
+  narrow,
   grid,
-  dotted;
+  dotted,
+
+  /// Prise de notes Cornell (marge de questions + résumé).
+  cornell;
 
   static PageTemplate parse(String? v) => PageTemplate.values
       .firstWhere((t) => t.name == v, orElse: () => PageTemplate.lined);
@@ -188,10 +231,18 @@ class NotePage implements SyncRow {
     this.assetId,
     this.assetPage,
     this.ocrText,
+    this.bookmarked = false,
+    this.outlineTitle,
     DateTime? modifiedAt,
     this.deleted = false,
     this.schemaVersion = kSchemaVersion,
   }) : modifiedAt = modifiedAt ?? nowUtc();
+
+  /// Page ajoutée aux signets.
+  final bool bookmarked;
+
+  /// Titre de la page dans le plan du cahier (null = absente du plan).
+  final String? outlineTitle;
 
   @override
   final String id;
@@ -225,6 +276,9 @@ class NotePage implements SyncRow {
     double? position,
     String? ocrText,
     bool? deleted,
+    bool? bookmarked,
+    String? outlineTitle,
+    bool clearOutline = false,
   }) =>
       NotePage(
         id: id,
@@ -237,6 +291,8 @@ class NotePage implements SyncRow {
         assetId: assetId,
         assetPage: assetPage,
         ocrText: ocrText ?? this.ocrText,
+        bookmarked: bookmarked ?? this.bookmarked,
+        outlineTitle: clearOutline ? null : (outlineTitle ?? this.outlineTitle),
         deleted: deleted ?? this.deleted,
       );
 
@@ -252,6 +308,8 @@ class NotePage implements SyncRow {
         'asset_id': assetId,
         'asset_page': assetPage,
         'ocr_text': ocrText,
+        'bookmarked': bookmarked,
+        'outline_title': outlineTitle,
         'modified_at': timeToJson(modifiedAt),
         'deleted': deleted,
         'schema_version': schemaVersion,
@@ -268,10 +326,30 @@ class NotePage implements SyncRow {
         assetId: r['asset_id'] as String?,
         assetPage: (r['asset_page'] as num?)?.toInt(),
         ocrText: r['ocr_text'] as String?,
+        bookmarked: r['bookmarked'] == true,
+        outlineTitle: r['outline_title'] as String?,
         modifiedAt: parseTime(r['modified_at']),
         deleted: r['deleted'] == true,
         schemaVersion: (r['schema_version'] as num?)?.toInt() ?? kSchemaVersion,
       );
+}
+
+/// Type de stylo: la forme du trait (épaisseur selon la pression).
+enum PenType {
+  /// Stylo à bille: épaisseur presque constante.
+  ball,
+
+  /// Stylo plume: épaisseur selon la pression.
+  fountain,
+
+  /// Pinceau: forte variation d'épaisseur.
+  brush,
+
+  /// Forme reconnue (ligne, rectangle, ellipse…): épaisseur constante.
+  shape;
+
+  static PenType parse(String? v) => PenType.values
+      .firstWhere((p) => p.name == v, orElse: () => PenType.fountain);
 }
 
 /// Élément posé sur une page.
@@ -295,6 +373,7 @@ class InkStroke implements PageElement {
     required this.width,
     required this.points,
     this.highlight = false,
+    this.pen = PenType.fountain,
     this.pattern = StrokePattern.solid,
     this.fixedColor,
     this.recolor = true,
@@ -319,6 +398,7 @@ class InkStroke implements PageElement {
   /// Triplets (x, y, pression). Pression < 0 = inconnue (doigt, souris).
   final Float32List points;
   final bool highlight;
+  final PenType pen;
   final StrokePattern pattern;
 
   /// Couleur libre hors rôles (fixed: true), en hex. Recolorée par le
@@ -359,16 +439,19 @@ class InkStroke implements PageElement {
     bool? deleted,
     String? id,
     StrokePattern? pattern,
+    double? width,
+    String? pageId,
   }) =>
       InkStroke(
         id: id ?? this.id,
         notebookId: notebookId,
-        pageId: pageId,
+        pageId: pageId ?? this.pageId,
         userId: userId,
         role: role ?? this.role,
-        width: width,
+        width: width ?? this.width,
         points: points ?? this.points,
         highlight: highlight,
+        pen: pen,
         pattern: pattern ?? this.pattern,
         fixedColor: role != null ? null : fixedColor,
         recolor: recolor,
@@ -422,6 +505,7 @@ class InkStroke implements PageElement {
         'width': width,
         'points': encodePoints(points),
         if (!highlight) 'pattern': pattern.name,
+        if (!highlight) 'pen': pen.name,
         if (!highlight) 'fixed_color': fixedColor,
         if (!highlight) 'recolor': recolor,
         if (highlight) 'target_type': 'free',
@@ -440,6 +524,7 @@ class InkStroke implements PageElement {
         width: _d(r['width'], 2.4),
         points: decodePoints(r['points']),
         highlight: highlight,
+        pen: highlight ? PenType.ball : PenType.parse(r['pen'] as String?),
         pattern: StrokePattern.parse(r['pattern'] as String?),
         fixedColor: r['fixed_color'] as String?,
         recolor: r['recolor'] != false,
@@ -514,11 +599,13 @@ class TextBlock implements PageElement {
     InkRole? role,
     double? size,
     bool? deleted,
+    String? id,
+    String? pageId,
   }) =>
       TextBlock(
-        id: id,
+        id: id ?? this.id,
         notebookId: notebookId,
-        pageId: pageId,
+        pageId: pageId ?? this.pageId,
         userId: userId,
         x: x ?? this.x,
         y: y ?? this.y,
@@ -562,6 +649,101 @@ class TextBlock implements PageElement {
         role: InkRole.parse(r['role'] as String?),
         size: _d(r['size'], 16),
         font: (r['font'] as String?) ?? 'system',
+        modifiedAt: parseTime(r['modified_at']),
+        deleted: r['deleted'] == true,
+      );
+}
+
+/// Image posée sur une page (photo de tableau, schéma). Le fichier
+/// d'origine est un [ImportedAsset] de type image, jamais modifié.
+class PageImage implements PageElement {
+  PageImage({
+    required this.id,
+    required this.notebookId,
+    required this.pageId,
+    this.userId,
+    required this.assetId,
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+    DateTime? createdAt,
+    DateTime? modifiedAt,
+    this.deleted = false,
+  })  : createdAt = createdAt ?? nowUtc(),
+        modifiedAt = modifiedAt ?? nowUtc();
+
+  @override
+  final String id;
+  @override
+  final String notebookId;
+  @override
+  final String pageId;
+  final String? userId;
+  final String assetId;
+  final double x, y, width, height;
+  final DateTime createdAt;
+  @override
+  final DateTime modifiedAt;
+  @override
+  final bool deleted;
+
+  @override
+  Rect get bounds => Rect.fromLTWH(x, y, width, height);
+
+  PageImage copyWith({
+    double? x,
+    double? y,
+    double? width,
+    double? height,
+    bool? deleted,
+    String? id,
+    String? pageId,
+  }) =>
+      PageImage(
+        id: id ?? this.id,
+        notebookId: notebookId,
+        pageId: pageId ?? this.pageId,
+        userId: userId,
+        assetId: assetId,
+        x: x ?? this.x,
+        y: y ?? this.y,
+        width: width ?? this.width,
+        height: height ?? this.height,
+        createdAt: id != null ? nowUtc() : createdAt,
+        deleted: deleted ?? this.deleted,
+      );
+
+  @override
+  PageImage markDeleted() => copyWith(deleted: true);
+
+  @override
+  Map<String, dynamic> toRow() => {
+        'id': id,
+        'notebook_id': notebookId,
+        'page_id': pageId,
+        'user_id': userId,
+        'asset_id': assetId,
+        'x': x,
+        'y': y,
+        'width': width,
+        'height': height,
+        'created_at': timeToJson(createdAt),
+        'modified_at': timeToJson(modifiedAt),
+        'deleted': deleted,
+      };
+
+  factory PageImage.fromRow(Map r) => PageImage(
+        id: r['id'] as String,
+        notebookId: r['notebook_id'] as String,
+        pageId: r['page_id'] as String,
+        userId: r['user_id'] as String?,
+        assetId: (r['asset_id'] as String?) ?? '',
+        x: _d(r['x']),
+        y: _d(r['y']),
+        width: _d(r['width'], 200),
+        height: _d(r['height'], 200),
+        createdAt: parseTime(r['created_at']),
         modifiedAt: parseTime(r['modified_at']),
         deleted: r['deleted'] == true,
       );

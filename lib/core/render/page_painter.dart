@@ -44,12 +44,26 @@ class PageBackgroundPainter extends CustomPainter {
       case PageTemplate.blank:
         break;
       case PageTemplate.lined:
-        for (var y = spacing * 3; y < size.height - spacing; y += spacing) {
+      case PageTemplate.narrow:
+        final step = template == PageTemplate.narrow ? 24.0 : spacing;
+        for (var y = spacing * 3; y < size.height - spacing; y += step) {
           canvas.drawLine(Offset(spacing, y), Offset(size.width - spacing, y), line);
         }
         // Marge
         canvas.drawLine(Offset(spacing * 2.5, spacing),
             Offset(spacing * 2.5, size.height - spacing), line);
+      case PageTemplate.cornell:
+        // Titre, colonne de questions (gauche), notes, résumé (bas).
+        final top = spacing * 3, bottom = size.height - size.height * 0.2;
+        final thick = Paint()
+          ..color = palette[InkRole.paperLine]
+          ..strokeWidth = 2;
+        canvas.drawLine(Offset(spacing, top), Offset(size.width - spacing, top), thick);
+        canvas.drawLine(Offset(size.width * 0.3, top), Offset(size.width * 0.3, bottom), thick);
+        canvas.drawLine(Offset(spacing, bottom), Offset(size.width - spacing, bottom), thick);
+        for (var y = top + spacing; y < bottom; y += spacing) {
+          canvas.drawLine(Offset(size.width * 0.3 + 8, y), Offset(size.width - spacing, y), line);
+        }
       case PageTemplate.grid:
         for (var y = spacing; y < size.height; y += spacing) {
           canvas.drawLine(Offset(0, y), Offset(size.width, y), line);

@@ -16,6 +16,7 @@ class Tables {
   static const strokes = 'strokes';
   static const highlights = 'highlights';
   static const textBlocks = 'text_blocks';
+  static const pageImages = 'page_images';
 
   static const ordered = [
     userSettings,
@@ -27,11 +28,12 @@ class Tables {
     strokes,
     highlights,
     textBlocks,
+    pageImages,
   ];
 
   /// Tables d'éléments de page, potentiellement très volumineuses: chargées
   /// page par page (boîtes paresseuses).
-  static const elementTables = {strokes, highlights, textBlocks};
+  static const elementTables = {strokes, highlights, textBlocks, pageImages};
 
   static String idColumn(String table) =>
       table == userSettings ? 'user_id' : 'id';

@@ -35,12 +35,8 @@ class _LibraryScreenState extends State<LibraryScreen> {
     super.dispose();
   }
 
-  void _open(Notebook n, {NotePage? page}) => Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => EditorScreen(notebookId: n.id, initialPageId: page?.id),
-        ),
-      );
+  void _open(Notebook n, {NotePage? page}) =>
+      openNotebook(context, n.id, pageId: page?.id);
 
   Future<String?> _askName(String title, {String initial = ''}) {
     final l = AppLocalizations.of(context);

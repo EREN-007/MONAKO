@@ -549,5 +549,72 @@
   "privacyPolicyTitle": "Politique de confidentialité",
   "accessibilityTitle": "Déclaration d’accessibilité",
   "privacyPolicyText": "Politique de confidentialité de Monako (langage simple)\n\n1. Ce que nous recueillons\n• Votre courriel, si vous créez un compte.\n• Vos notes (traits, textes, surlignages) et les PDF ou images que vous importez.\n• Vos profils visuels (couleurs, tailles, filtres) et vos réglages.\nNous ne vous demandons jamais le nom d’une maladie. Nous ne recueillons aucune donnée publicitaire et n’utilisons aucun outil de suivi.\n\n2. Pourquoi\nUniquement pour afficher vos notes dans vos couleurs et les synchroniser entre vos appareils.\n\n3. Données sensibles\nUn profil visuel peut révéler un besoin de santé. Il est donc :\n• stocké dans votre compte privé, accessible à vous seul (même quand vous partagez un cahier, votre profil n’est jamais partagé) ;\n• chiffré pendant le transfert (HTTPS) et au repos (serveur et appareil) ;\n• jamais vendu, jamais partagé avec de la publicité.\nLa reconnaissance de texte (OCR) se fait sur votre appareil.\n\n4. Hébergement\nLes données sont hébergées par Supabase (base de données Postgres, stockage de fichiers et authentification).\n\n5. Vos droits\n• Exporter toutes vos données (Réglages › Exporter mes données).\n• Supprimer votre compte : vos notes, profils et fichiers sont effacés immédiatement (au plus tard en 30 jours dans les sauvegardes).\n• Vous déconnecter : les données sont retirées de l’appareil.\n\n6. Élèves mineurs\nSi vous avez moins de 14 ans (Québec) ou si votre école l’exige, un parent ou tuteur doit consentir à la création du compte.\n\n7. Cadre légal\nLoi sur la protection des renseignements personnels et les documents électroniques (LPRPDE) et, au Québec, Loi 25. Pour toute question : contactez le responsable de la protection des renseignements personnels indiqué dans la fiche de l’app.",
-  "accessibilityText": "Déclaration d’accessibilité\n\nMonako vise la conformité aux Règles pour l’accessibilité des contenus Web (WCAG) 2.2, niveau AA, pour toute son interface.\n\nCe que l’app offre :\n• Toute l’interface est recolorée par votre profil : jamais de blanc ni de noir purs imposés.\n• Cibles tactiles d’au moins 44 pt / 48 dp.\n• Compatibilité VoiceOver (iOS) et TalkBack (Android) : chaque bouton a un nom.\n• Respect de la taille de texte du système.\n• Aucun clignotement ; fondus de 200 ms au maximum.\n• Aucune information portée par la couleur seule : chaque encre a un numéro, un motif ou une icône.\n• Interface en français et en anglais.\n• Geste de secours : un triple toucher rétablit un profil lisible.\n\nLimites connues :\n• Un PDF scanné de mauvaise qualité sans texte reconnu n’a que le filtre de couleur.\n• Les graphiques avec légendes colorées peuvent perdre en sens après recoloration : utilisez « Voir l’original ».\n\nSignaler un problème : écrivez-nous depuis la fiche de l’app. Nous répondons dans un délai de 10 jours ouvrables."
+  "accessibilityText": "Déclaration d’accessibilité\n\nMonako vise la conformité aux Règles pour l’accessibilité des contenus Web (WCAG) 2.2, niveau AA, pour toute son interface.\n\nCe que l’app offre :\n• Toute l’interface est recolorée par votre profil : jamais de blanc ni de noir purs imposés.\n• Cibles tactiles d’au moins 44 pt / 48 dp.\n• Compatibilité VoiceOver (iOS) et TalkBack (Android) : chaque bouton a un nom.\n• Respect de la taille de texte du système.\n• Aucun clignotement ; fondus de 200 ms au maximum.\n• Aucune information portée par la couleur seule : chaque encre a un numéro, un motif ou une icône.\n• Interface en français et en anglais.\n• Geste de secours : un triple toucher rétablit un profil lisible.\n\nLimites connues :\n• Un PDF scanné de mauvaise qualité sans texte reconnu n’a que le filtre de couleur.\n• Les graphiques avec légendes colorées peuvent perdre en sens après recoloration : utilisez « Voir l’original ».\n\nSignaler un problème : écrivez-nous depuis la fiche de l’app. Nous répondons dans un délai de 10 jours ouvrables.",
+  "library": "Bibliothèque",
+  "pagesPanel": "Panneau des pages",
+  "pages": "Pages",
+  "outline": "Plan",
+  "bookmarks": "Signets",
+  "outlineEmpty": "Aucune page dans le plan. Menu d’une page › « Ajouter au plan ».",
+  "bookmarksEmpty": "Aucun signet. Menu d’une page › « Ajouter aux signets ».",
+  "pageMenu": "Menu de la page",
+  "pageNumber": "Page {n}",
+  "@pageNumber": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "searchInDocument": "Rechercher dans le document",
+  "shareAndExport": "Partager et exporter",
+  "closeTab": "Fermer l’onglet",
+  "copy": "Copier",
+  "cut": "Couper",
+  "paste": "Coller",
+  "duplicate": "Dupliquer",
+  "changeInk": "Changer l’encre",
+  "toolLasso": "Lasso",
+  "toolShapes": "Formes",
+  "toolLaser": "Pointeur laser",
+  "insertImage": "Insérer une image",
+  "penBall": "Bille",
+  "penFountain": "Plume",
+  "penBrush": "Pinceau",
+  "penType": "Type de stylo : {name}",
+  "@penType": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "holdToShape": "Astuce : dessinez puis maintenez pour une forme parfaite.",
+  "shapesHint": "Dessinez une ligne, un rectangle, un cercle ou un triangle.",
+  "textHint": "Touchez la page pour écrire du texte.",
+  "eraseStroke": "Trait entier",
+  "erasePrecise": "Précise",
+  "eraseHighlightsOnly": "Surlignages seulement",
+  "lassoHint": "Entourez des éléments pour les déplacer, redimensionner ou copier.",
+  "laserHint": "Montrez sans écrire : la trace s’efface d’elle-même.",
+  "addBookmark": "Ajouter aux signets",
+  "removeBookmark": "Retirer des signets",
+  "addToOutline": "Ajouter au plan",
+  "renameInOutline": "Renommer dans le plan",
+  "outlineTitle": "Titre dans le plan",
+  "duplicatePage": "Dupliquer la page",
+  "changeTemplate": "Changer le gabarit",
+  "goToPage": "Aller à la page",
+  "scrollHorizontal": "Défilement horizontal",
+  "clearPage": "Effacer la page",
+  "clearPageConfirm": "Effacer tout ce qui est écrit sur cette page ? (Annuler reste possible.)",
+  "insertBefore": "Avant",
+  "insertAfter": "Après",
+  "insertLast": "À la fin",
+  "portrait": "Portrait",
+  "landscape": "Paysage",
+  "templates": "Gabarits",
+  "templateNarrow": "Ligné étroit",
+  "templateCornell": "Cornell",
+  "imagePage": "Page à partir d’une image"
 }
