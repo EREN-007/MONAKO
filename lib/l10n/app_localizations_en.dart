@@ -34,9 +34,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get next => 'Next';
 
   @override
-  String get add => 'Add';
-
-  @override
   String get edit => 'Edit';
 
   @override
@@ -564,12 +561,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get searchHint => 'Search notebooks or text';
 
   @override
-  String get clearSearch => 'Clear search';
-
-  @override
-  String get allNotebooks => 'All';
-
-  @override
   String get folderOptions => 'Folder options';
 
   @override
@@ -608,9 +599,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get coverColor => 'Cover colour';
-
-  @override
-  String get deleteNotebook => 'Delete notebook';
 
   @override
   String deleteNotebookConfirm(String title) {
@@ -685,9 +673,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get toolEraser => 'Eraser';
 
   @override
-  String get toolSelect => 'Select';
-
-  @override
   String get toolHand => 'Move view';
 
   @override
@@ -700,13 +685,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get widthThick => 'Thick stroke';
 
   @override
-  String get selectHint => 'Draw a rectangle around items.';
-
-  @override
   String get deleteSelection => 'Delete selection';
-
-  @override
-  String get eraserHint => 'Drag over a stroke to erase it.';
 
   @override
   String get handHint => 'Drag to move, pinch to zoom.';
@@ -717,17 +696,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String pageSemantics(int current, int total) {
-    return 'Page $current of $total';
-  }
-
-  @override
-  String get previousPage => 'Previous page';
-
-  @override
-  String get nextPage => 'Next page';
-
-  @override
   String get addPage => 'Add page';
 
   @override
@@ -735,9 +703,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deletePageConfirm => 'Delete this page and its annotations?';
-
-  @override
-  String get pageTemplate => 'Page template';
 
   @override
   String get templateBlank => 'Blank';
@@ -780,9 +745,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importIntoNotebook => 'Import a PDF or image here';
-
-  @override
-  String get assetUnavailable => 'File not yet available on this device.';
 
   @override
   String get ocrRunning => 'Recognising text…';
@@ -1200,4 +1162,103 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get imagePage => 'Page from an image';
+
+  @override
+  String get documents => 'Documents';
+
+  @override
+  String get favorites => 'Favorites';
+
+  @override
+  String get sharedWithMe => 'Shared with me';
+
+  @override
+  String get trash => 'Trash';
+
+  @override
+  String get importShort => 'Import';
+
+  @override
+  String get notebook => 'Notebook';
+
+  @override
+  String get whiteboard => 'Whiteboard';
+
+  @override
+  String get quickNote => 'Quick note';
+
+  @override
+  String get newItem => 'New';
+
+  @override
+  String quickNoteTitle(String date) {
+    return 'Quick note – $date';
+  }
+
+  @override
+  String get sortBy => 'Sort';
+
+  @override
+  String get sortRecent => 'Recent';
+
+  @override
+  String get sortName => 'Name';
+
+  @override
+  String get gridView => 'Grid view';
+
+  @override
+  String get listView => 'List view';
+
+  @override
+  String get emptyTrash => 'Empty trash';
+
+  @override
+  String get emptyTrashConfirm =>
+      'Permanently delete every notebook in the trash?';
+
+  @override
+  String get favoritesEmpty => 'Tap a notebook’s star to find it here.';
+
+  @override
+  String get sharedEmpty => 'No notebooks shared with you yet.';
+
+  @override
+  String get trashEmpty =>
+      'The trash is empty. Notebooks stay here for 30 days.';
+
+  @override
+  String notebookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count notebooks',
+      one: '1 notebook',
+      zero: 'Empty',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get addFavorite => 'Add to favorites';
+
+  @override
+  String get removeFavorite => 'Remove from favorites';
+
+  @override
+  String get moveToTrash => 'Move to trash';
+
+  @override
+  String movedToTrash(String title) {
+    return '“$title” moved to the trash.';
+  }
+
+  @override
+  String get restore => 'Restore';
+
+  @override
+  String get deleteForever => 'Delete forever';
 }

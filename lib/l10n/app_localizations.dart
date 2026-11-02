@@ -146,12 +146,6 @@ abstract class AppLocalizations {
   /// **'Suivant'**
   String get next;
 
-  /// No description provided for @add.
-  ///
-  /// In fr, this message translates to:
-  /// **'Ajouter'**
-  String get add;
-
   /// No description provided for @edit.
   ///
   /// In fr, this message translates to:
@@ -1094,18 +1088,6 @@ abstract class AppLocalizations {
   /// **'Rechercher un cahier ou du texte'**
   String get searchHint;
 
-  /// No description provided for @clearSearch.
-  ///
-  /// In fr, this message translates to:
-  /// **'Effacer la recherche'**
-  String get clearSearch;
-
-  /// No description provided for @allNotebooks.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tous'**
-  String get allNotebooks;
-
   /// No description provided for @folderOptions.
   ///
   /// In fr, this message translates to:
@@ -1183,12 +1165,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Couleur de couverture'**
   String get coverColor;
-
-  /// No description provided for @deleteNotebook.
-  ///
-  /// In fr, this message translates to:
-  /// **'Supprimer le cahier'**
-  String get deleteNotebook;
 
   /// No description provided for @deleteNotebookConfirm.
   ///
@@ -1298,12 +1274,6 @@ abstract class AppLocalizations {
   /// **'Gomme'**
   String get toolEraser;
 
-  /// No description provided for @toolSelect.
-  ///
-  /// In fr, this message translates to:
-  /// **'Sélection'**
-  String get toolSelect;
-
   /// No description provided for @toolHand.
   ///
   /// In fr, this message translates to:
@@ -1328,23 +1298,11 @@ abstract class AppLocalizations {
   /// **'Trait épais'**
   String get widthThick;
 
-  /// No description provided for @selectHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Tracez un rectangle autour des éléments.'**
-  String get selectHint;
-
   /// No description provided for @deleteSelection.
   ///
   /// In fr, this message translates to:
   /// **'Supprimer la sélection'**
   String get deleteSelection;
-
-  /// No description provided for @eraserHint.
-  ///
-  /// In fr, this message translates to:
-  /// **'Glissez sur un trait pour l’effacer.'**
-  String get eraserHint;
 
   /// No description provided for @handHint.
   ///
@@ -1357,24 +1315,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Page {current} / {total}'**
   String pageOf(int current, int total);
-
-  /// No description provided for @pageSemantics.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page {current} sur {total}'**
-  String pageSemantics(int current, int total);
-
-  /// No description provided for @previousPage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page précédente'**
-  String get previousPage;
-
-  /// No description provided for @nextPage.
-  ///
-  /// In fr, this message translates to:
-  /// **'Page suivante'**
-  String get nextPage;
 
   /// No description provided for @addPage.
   ///
@@ -1393,12 +1333,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Supprimer cette page et ses annotations ?'**
   String get deletePageConfirm;
-
-  /// No description provided for @pageTemplate.
-  ///
-  /// In fr, this message translates to:
-  /// **'Gabarit de page'**
-  String get pageTemplate;
 
   /// No description provided for @templateBlank.
   ///
@@ -1483,12 +1417,6 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Importer un PDF ou une image ici'**
   String get importIntoNotebook;
-
-  /// No description provided for @assetUnavailable.
-  ///
-  /// In fr, this message translates to:
-  /// **'Fichier pas encore disponible sur cet appareil.'**
-  String get assetUnavailable;
 
   /// No description provided for @ocrRunning.
   ///
@@ -2269,6 +2197,174 @@ abstract class AppLocalizations {
   /// In fr, this message translates to:
   /// **'Page à partir d’une image'**
   String get imagePage;
+
+  /// No description provided for @documents.
+  ///
+  /// In fr, this message translates to:
+  /// **'Documents'**
+  String get documents;
+
+  /// No description provided for @favorites.
+  ///
+  /// In fr, this message translates to:
+  /// **'Favoris'**
+  String get favorites;
+
+  /// No description provided for @sharedWithMe.
+  ///
+  /// In fr, this message translates to:
+  /// **'Partagés avec moi'**
+  String get sharedWithMe;
+
+  /// No description provided for @trash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Corbeille'**
+  String get trash;
+
+  /// No description provided for @importShort.
+  ///
+  /// In fr, this message translates to:
+  /// **'Importer'**
+  String get importShort;
+
+  /// No description provided for @notebook.
+  ///
+  /// In fr, this message translates to:
+  /// **'Cahier'**
+  String get notebook;
+
+  /// No description provided for @whiteboard.
+  ///
+  /// In fr, this message translates to:
+  /// **'Tableau blanc'**
+  String get whiteboard;
+
+  /// No description provided for @quickNote.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note rapide'**
+  String get quickNote;
+
+  /// No description provided for @newItem.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nouveau'**
+  String get newItem;
+
+  /// No description provided for @quickNoteTitle.
+  ///
+  /// In fr, this message translates to:
+  /// **'Note rapide – {date}'**
+  String quickNoteTitle(String date);
+
+  /// No description provided for @sortBy.
+  ///
+  /// In fr, this message translates to:
+  /// **'Trier'**
+  String get sortBy;
+
+  /// No description provided for @sortRecent.
+  ///
+  /// In fr, this message translates to:
+  /// **'Récents'**
+  String get sortRecent;
+
+  /// No description provided for @sortName.
+  ///
+  /// In fr, this message translates to:
+  /// **'Nom'**
+  String get sortName;
+
+  /// No description provided for @gridView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue en grille'**
+  String get gridView;
+
+  /// No description provided for @listView.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vue en liste'**
+  String get listView;
+
+  /// No description provided for @emptyTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Vider la corbeille'**
+  String get emptyTrash;
+
+  /// No description provided for @emptyTrashConfirm.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement tous les cahiers de la corbeille ?'**
+  String get emptyTrashConfirm;
+
+  /// No description provided for @favoritesEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Touchez l’étoile d’un cahier pour le retrouver ici.'**
+  String get favoritesEmpty;
+
+  /// No description provided for @sharedEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'Aucun cahier partagé avec vous pour l’instant.'**
+  String get sharedEmpty;
+
+  /// No description provided for @trashEmpty.
+  ///
+  /// In fr, this message translates to:
+  /// **'La corbeille est vide. Les cahiers y restent 30 jours.'**
+  String get trashEmpty;
+
+  /// No description provided for @notebookCount.
+  ///
+  /// In fr, this message translates to:
+  /// **'{count, plural, =0{Vide} =1{1 cahier} other{{count} cahiers}}'**
+  String notebookCount(int count);
+
+  /// No description provided for @create.
+  ///
+  /// In fr, this message translates to:
+  /// **'Créer'**
+  String get create;
+
+  /// No description provided for @addFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Ajouter aux favoris'**
+  String get addFavorite;
+
+  /// No description provided for @removeFavorite.
+  ///
+  /// In fr, this message translates to:
+  /// **'Retirer des favoris'**
+  String get removeFavorite;
+
+  /// No description provided for @moveToTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'Mettre à la corbeille'**
+  String get moveToTrash;
+
+  /// No description provided for @movedToTrash.
+  ///
+  /// In fr, this message translates to:
+  /// **'« {title} » est dans la corbeille.'**
+  String movedToTrash(String title);
+
+  /// No description provided for @restore.
+  ///
+  /// In fr, this message translates to:
+  /// **'Restaurer'**
+  String get restore;
+
+  /// No description provided for @deleteForever.
+  ///
+  /// In fr, this message translates to:
+  /// **'Supprimer définitivement'**
+  String get deleteForever;
 }
 
 class _AppLocalizationsDelegate

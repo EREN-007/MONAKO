@@ -8,7 +8,6 @@
   "close": "Fermer",
   "back": "Retour",
   "next": "Suivant",
-  "add": "Ajouter",
   "edit": "Modifier",
   "rename": "Renommer",
   "name": "Nom",
@@ -315,8 +314,6 @@
   "sampleMargin": "Note en marge : relire pour l’examen.",
   "samplePreviewSemantics": "Aperçu d’une note dans ce profil",
   "searchHint": "Rechercher un cahier ou du texte",
-  "clearSearch": "Effacer la recherche",
-  "allNotebooks": "Tous",
   "folderOptions": "Options du dossier",
   "newNotebook": "Nouveau cahier",
   "untitledNotebook": "Cahier sans titre",
@@ -330,7 +327,6 @@
   "moveToFolder": "Déplacer vers un dossier",
   "noFolder": "Aucun dossier",
   "coverColor": "Couleur de couverture",
-  "deleteNotebook": "Supprimer le cahier",
   "deleteNotebookConfirm": "Supprimer « {title} » sur tous vos appareils ?",
   "@deleteNotebookConfirm": {
     "placeholders": {
@@ -397,14 +393,11 @@
   "toolHighlighter": "Surligneur",
   "toolText": "Texte",
   "toolEraser": "Gomme",
-  "toolSelect": "Sélection",
   "toolHand": "Déplacer la vue",
   "widthFine": "Trait fin",
   "widthMedium": "Trait moyen",
   "widthThick": "Trait épais",
-  "selectHint": "Tracez un rectangle autour des éléments.",
   "deleteSelection": "Supprimer la sélection",
-  "eraserHint": "Glissez sur un trait pour l’effacer.",
   "handHint": "Glissez pour déplacer, pincez pour zoomer.",
   "pageOf": "Page {current} / {total}",
   "@pageOf": {
@@ -417,23 +410,9 @@
       }
     }
   },
-  "pageSemantics": "Page {current} sur {total}",
-  "@pageSemantics": {
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
-  "previousPage": "Page précédente",
-  "nextPage": "Page suivante",
   "addPage": "Ajouter une page",
   "deletePage": "Supprimer la page",
   "deletePageConfirm": "Supprimer cette page et ses annotations ?",
-  "pageTemplate": "Gabarit de page",
   "templateBlank": "Blanc",
   "templateLined": "Ligné",
   "templateGrid": "Quadrillé",
@@ -448,7 +427,6 @@
   "showOriginal": "Voir l’original",
   "documentFilter": "Filtre du document",
   "importIntoNotebook": "Importer un PDF ou une image ici",
-  "assetUnavailable": "Fichier pas encore disponible sur cet appareil.",
   "ocrRunning": "Reconnaissance du texte…",
   "ocrFailed": "Texte illisible : la page garde le filtre de couleur seulement.",
   "ocrDone": "Texte reconnu : il est maintenant recherchable et lisible à voix haute.",
@@ -616,5 +594,54 @@
   "templates": "Gabarits",
   "templateNarrow": "Ligné étroit",
   "templateCornell": "Cornell",
-  "imagePage": "Page à partir d’une image"
+  "imagePage": "Page à partir d’une image",
+  "documents": "Documents",
+  "favorites": "Favoris",
+  "sharedWithMe": "Partagés avec moi",
+  "trash": "Corbeille",
+  "importShort": "Importer",
+  "notebook": "Cahier",
+  "whiteboard": "Tableau blanc",
+  "quickNote": "Note rapide",
+  "newItem": "Nouveau",
+  "quickNoteTitle": "Note rapide – {date}",
+  "@quickNoteTitle": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "sortBy": "Trier",
+  "sortRecent": "Récents",
+  "sortName": "Nom",
+  "gridView": "Vue en grille",
+  "listView": "Vue en liste",
+  "emptyTrash": "Vider la corbeille",
+  "emptyTrashConfirm": "Supprimer définitivement tous les cahiers de la corbeille ?",
+  "favoritesEmpty": "Touchez l’étoile d’un cahier pour le retrouver ici.",
+  "sharedEmpty": "Aucun cahier partagé avec vous pour l’instant.",
+  "trashEmpty": "La corbeille est vide. Les cahiers y restent 30 jours.",
+  "notebookCount": "{count, plural, =0{Vide} =1{1 cahier} other{{count} cahiers}}",
+  "@notebookCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "create": "Créer",
+  "addFavorite": "Ajouter aux favoris",
+  "removeFavorite": "Retirer des favoris",
+  "moveToTrash": "Mettre à la corbeille",
+  "movedToTrash": "« {title} » est dans la corbeille.",
+  "@movedToTrash": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "restore": "Restaurer",
+  "deleteForever": "Supprimer définitivement"
 }

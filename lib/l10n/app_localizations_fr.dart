@@ -34,9 +34,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get next => 'Suivant';
 
   @override
-  String get add => 'Ajouter';
-
-  @override
   String get edit => 'Modifier';
 
   @override
@@ -565,12 +562,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get searchHint => 'Rechercher un cahier ou du texte';
 
   @override
-  String get clearSearch => 'Effacer la recherche';
-
-  @override
-  String get allNotebooks => 'Tous';
-
-  @override
   String get folderOptions => 'Options du dossier';
 
   @override
@@ -609,9 +600,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get coverColor => 'Couleur de couverture';
-
-  @override
-  String get deleteNotebook => 'Supprimer le cahier';
 
   @override
   String deleteNotebookConfirm(String title) {
@@ -687,9 +675,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get toolEraser => 'Gomme';
 
   @override
-  String get toolSelect => 'Sélection';
-
-  @override
   String get toolHand => 'Déplacer la vue';
 
   @override
@@ -702,13 +687,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get widthThick => 'Trait épais';
 
   @override
-  String get selectHint => 'Tracez un rectangle autour des éléments.';
-
-  @override
   String get deleteSelection => 'Supprimer la sélection';
-
-  @override
-  String get eraserHint => 'Glissez sur un trait pour l’effacer.';
 
   @override
   String get handHint => 'Glissez pour déplacer, pincez pour zoomer.';
@@ -719,17 +698,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String pageSemantics(int current, int total) {
-    return 'Page $current sur $total';
-  }
-
-  @override
-  String get previousPage => 'Page précédente';
-
-  @override
-  String get nextPage => 'Page suivante';
-
-  @override
   String get addPage => 'Ajouter une page';
 
   @override
@@ -737,9 +705,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get deletePageConfirm => 'Supprimer cette page et ses annotations ?';
-
-  @override
-  String get pageTemplate => 'Gabarit de page';
 
   @override
   String get templateBlank => 'Blanc';
@@ -782,10 +747,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get importIntoNotebook => 'Importer un PDF ou une image ici';
-
-  @override
-  String get assetUnavailable =>
-      'Fichier pas encore disponible sur cet appareil.';
 
   @override
   String get ocrRunning => 'Reconnaissance du texte…';
@@ -1211,4 +1172,104 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get imagePage => 'Page à partir d’une image';
+
+  @override
+  String get documents => 'Documents';
+
+  @override
+  String get favorites => 'Favoris';
+
+  @override
+  String get sharedWithMe => 'Partagés avec moi';
+
+  @override
+  String get trash => 'Corbeille';
+
+  @override
+  String get importShort => 'Importer';
+
+  @override
+  String get notebook => 'Cahier';
+
+  @override
+  String get whiteboard => 'Tableau blanc';
+
+  @override
+  String get quickNote => 'Note rapide';
+
+  @override
+  String get newItem => 'Nouveau';
+
+  @override
+  String quickNoteTitle(String date) {
+    return 'Note rapide – $date';
+  }
+
+  @override
+  String get sortBy => 'Trier';
+
+  @override
+  String get sortRecent => 'Récents';
+
+  @override
+  String get sortName => 'Nom';
+
+  @override
+  String get gridView => 'Vue en grille';
+
+  @override
+  String get listView => 'Vue en liste';
+
+  @override
+  String get emptyTrash => 'Vider la corbeille';
+
+  @override
+  String get emptyTrashConfirm =>
+      'Supprimer définitivement tous les cahiers de la corbeille ?';
+
+  @override
+  String get favoritesEmpty =>
+      'Touchez l’étoile d’un cahier pour le retrouver ici.';
+
+  @override
+  String get sharedEmpty => 'Aucun cahier partagé avec vous pour l’instant.';
+
+  @override
+  String get trashEmpty =>
+      'La corbeille est vide. Les cahiers y restent 30 jours.';
+
+  @override
+  String notebookCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count cahiers',
+      one: '1 cahier',
+      zero: 'Vide',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get create => 'Créer';
+
+  @override
+  String get addFavorite => 'Ajouter aux favoris';
+
+  @override
+  String get removeFavorite => 'Retirer des favoris';
+
+  @override
+  String get moveToTrash => 'Mettre à la corbeille';
+
+  @override
+  String movedToTrash(String title) {
+    return '« $title » est dans la corbeille.';
+  }
+
+  @override
+  String get restore => 'Restaurer';
+
+  @override
+  String get deleteForever => 'Supprimer définitivement';
 }
