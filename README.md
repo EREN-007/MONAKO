@@ -226,7 +226,7 @@ test/             contraste, couleur, encre sémantique, fusion, recoloration,
 
 ## Licence
 
-Logiciel propriétaire — © 2026 EREN-007, tous droits réservés. Aucune réutilisation,
+Logiciel propriétaire — © 2026 Vincere Startup (en cours de constitution), tous droits réservés. Aucune réutilisation,
 copie ou redistribution sans accord écrit. Voir [`LICENSE`](LICENSE).
 
 ## Licences des ressources
