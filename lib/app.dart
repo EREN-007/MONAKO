@@ -15,6 +15,7 @@ import 'services/ocr/ocr_service.dart';
 import 'services/profile_controller.dart';
 import 'services/speech_service.dart';
 import 'ui/editor/open_tabs.dart';
+import 'ui/home/welcome_screen.dart';
 import 'ui/library/library_screen.dart';
 import 'ui/onboarding/onboarding_screen.dart';
 import 'ui/theme.dart';
@@ -41,6 +42,9 @@ class _MonakoAppState extends State<MonakoApp> with WidgetsBindingObserver {
   final OcrService ocr = OcrService();
   final OpenTabs tabs = OpenTabs();
   Timer? _periodic;
+
+  /// Page d'accueil déjà passée pendant cette session.
+  bool _welcomeDone = false;
 
   @override
   void initState() {
@@ -85,6 +89,9 @@ class _MonakoAppState extends State<MonakoApp> with WidgetsBindingObserver {
       child: Consumer2<ProfileController, NotesRepository>(
         builder: (context, pc, repo, _) {
           final profile = pc.profile;
+          // Après l'accueil de première utilisation, pas de page d'accueil
+          // en plus pendant cette session.
+          if (!repo.settings.onboardingDone) _welcomeDone = true;
           final locale = repo.settings.locale;
           return MaterialApp(
             title: 'Monako',
@@ -119,9 +126,11 @@ class _MonakoAppState extends State<MonakoApp> with WidgetsBindingObserver {
               }
               return app;
             },
-            home: repo.settings.onboardingDone
-                ? const LibraryScreen()
-                : const OnboardingScreen(),
+            home: !repo.settings.onboardingDone
+                ? const OnboardingScreen()
+                : (repo.settings.showWelcome && !_welcomeDone)
+                    ? WelcomeScreen(onContinue: () => setState(() => _welcomeDone = true))
+                    : const LibraryScreen(),
           );
         },
       ),

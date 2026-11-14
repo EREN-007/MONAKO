@@ -164,7 +164,7 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
               final pc = context.read<ProfileController>();
               final p = await Navigator.push<VisualProfile>(context,
                   MaterialPageRoute(builder: (_) => const CalibrationScreen()));
-              if (p != null) await pc.setActive(p.id);
+              if (p != null) await pc.setHome(p.id);
             },
             icon: const Icon(Icons.tune),
           ),

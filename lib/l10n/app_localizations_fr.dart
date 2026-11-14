@@ -49,9 +49,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get or => 'ou';
 
   @override
-  String get selected => 'Sélectionné';
-
-  @override
   String get share => 'Partager';
 
   @override
@@ -205,9 +202,6 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get presetE => 'Flou et distorsion';
-
-  @override
-  String get profilesTitle => 'Profils enregistrés';
 
   @override
   String get visualProfiles => 'Profils visuels';
@@ -1372,4 +1366,82 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get calResultHelp =>
       'Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.';
+
+  @override
+  String get myProfileTitle => 'Mon profil';
+
+  @override
+  String myProfileNamed(String name) {
+    return 'Mon profil : $name';
+  }
+
+  @override
+  String get backToMyProfile => 'Revenir à mon profil';
+
+  @override
+  String get inUse => 'Utilisé';
+
+  @override
+  String tryingProfile(String name) {
+    return 'Vous essayez « $name ». Votre profil reste enregistré.';
+  }
+
+  @override
+  String get makeItMyProfile => 'En faire mon profil';
+
+  @override
+  String get tryAnotherLook => 'Essayer un autre affichage';
+
+  @override
+  String get tryAnotherLookHelp =>
+      'Un toucher change tout l’affichage, en direct. Appui long : en faire mon profil.';
+
+  @override
+  String get customizeLook => 'Choisir mon fond et mon encre';
+
+  @override
+  String get customizeLookHelp =>
+      'Choisissez librement : Monako ajuste la luminosité pour garder un contraste sûr.';
+
+  @override
+  String get background => 'Fond';
+
+  @override
+  String get ink => 'Encre';
+
+  @override
+  String get myCustomLook => 'Mon affichage personnalisé';
+
+  @override
+  String get welcomeBack => 'Bon retour !';
+
+  @override
+  String welcomeBackUser(String email) {
+    return 'Bon retour, $email !';
+  }
+
+  @override
+  String get welcomeTagline =>
+      'Vos notes, dans les couleurs qui reposent vos yeux.';
+
+  @override
+  String get openMyNotes => 'Ouvrir mes notes';
+
+  @override
+  String resumeNotebook(String title) {
+    return 'Reprendre « $title »';
+  }
+
+  @override
+  String get signInToSync => 'Se connecter pour synchroniser';
+
+  @override
+  String get restoreHomeOnStart => 'Revenir à mon profil à chaque ouverture';
+
+  @override
+  String get restoreHomeOnStartHelp =>
+      'Les essais d’autres affichages restent libres pendant la session.';
+
+  @override
+  String get showWelcomeSetting => 'Afficher la page d’accueil à l’ouverture';
 }

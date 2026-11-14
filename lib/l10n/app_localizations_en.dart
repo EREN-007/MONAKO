@@ -49,9 +49,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get or => 'or';
 
   @override
-  String get selected => 'Selected';
-
-  @override
   String get share => 'Share';
 
   @override
@@ -205,9 +202,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get presetE => 'Blur and distortion';
-
-  @override
-  String get profilesTitle => 'Saved profiles';
 
   @override
   String get visualProfiles => 'Visual profiles';
@@ -1362,4 +1356,82 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get calResultHelp =>
       'Here is a note in this profile. You can adjust it at any time.';
+
+  @override
+  String get myProfileTitle => 'My profile';
+
+  @override
+  String myProfileNamed(String name) {
+    return 'My profile: $name';
+  }
+
+  @override
+  String get backToMyProfile => 'Back to my profile';
+
+  @override
+  String get inUse => 'In use';
+
+  @override
+  String tryingProfile(String name) {
+    return 'You are trying “$name”. Your profile stays saved.';
+  }
+
+  @override
+  String get makeItMyProfile => 'Make it my profile';
+
+  @override
+  String get tryAnotherLook => 'Try another look';
+
+  @override
+  String get tryAnotherLookHelp =>
+      'One tap changes the whole display, live. Long press: make it my profile.';
+
+  @override
+  String get customizeLook => 'Choose my background and ink';
+
+  @override
+  String get customizeLookHelp =>
+      'Choose freely: Monako adjusts brightness to keep a safe contrast.';
+
+  @override
+  String get background => 'Background';
+
+  @override
+  String get ink => 'Ink';
+
+  @override
+  String get myCustomLook => 'My custom look';
+
+  @override
+  String get welcomeBack => 'Welcome back!';
+
+  @override
+  String welcomeBackUser(String email) {
+    return 'Welcome back, $email!';
+  }
+
+  @override
+  String get welcomeTagline =>
+      'Your notes, in the colours that rest your eyes.';
+
+  @override
+  String get openMyNotes => 'Open my notes';
+
+  @override
+  String resumeNotebook(String title) {
+    return 'Resume “$title”';
+  }
+
+  @override
+  String get signInToSync => 'Sign in to sync';
+
+  @override
+  String get restoreHomeOnStart => 'Return to my profile at every launch';
+
+  @override
+  String get restoreHomeOnStartHelp =>
+      'Trying other looks stays free during the session.';
+
+  @override
+  String get showWelcomeSetting => 'Show the welcome page at launch';
 }

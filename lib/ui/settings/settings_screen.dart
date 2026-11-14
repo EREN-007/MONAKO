@@ -80,7 +80,7 @@ class SettingsScreen extends StatelessWidget {
                     final pc = context.read<ProfileController>();
                     final p = await Navigator.push<VisualProfile>(context,
                         MaterialPageRoute(builder: (_) => const CalibrationScreen()));
-                    if (p != null) await pc.setActive(p.id);
+                    if (p != null) await pc.setHome(p.id);
                   },
                 ),
                 ListTile(
@@ -88,6 +88,19 @@ class SettingsScreen extends StatelessWidget {
                   title: Text(l.redoComfortTest),
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const OnboardingScreen())),
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.home_outlined),
+                  title: Text(l.restoreHomeOnStart),
+                  subtitle: Text(l.restoreHomeOnStartHelp),
+                  value: s.restoreHomeOnStart,
+                  onChanged: (v) => repo.updateSettings(s.copyWith(restoreHomeOnStart: v)),
+                ),
+                SwitchListTile(
+                  secondary: const Icon(Icons.waving_hand_outlined),
+                  title: Text(l.showWelcomeSetting),
+                  value: s.showWelcome,
+                  onChanged: (v) => repo.updateSettings(s.copyWith(showWelcome: v)),
                 ),
                 section(l.automaticModes),
                 SwitchListTile(

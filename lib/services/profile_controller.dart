@@ -17,7 +17,22 @@ class ProfileController extends ChangeNotifier {
   ProfileController(this.repo) {
     repo.addListener(_onRepo);
     _timer = Timer.periodic(const Duration(minutes: 1), (_) => _recompute());
+    _restoreHome();
     _recompute();
+  }
+
+  /// Au démarrage, « mon profil » reprend la priorité sur un essai.
+  void _restoreHome() {
+    final s = repo.settings;
+    if (s.homeProfileId == null && s.onboardingDone) {
+      // Comptes existants: le profil en cours devient « mon profil ».
+      repo.updateSettings(s.copyWith(homeProfileId: s.activeProfileId));
+      return;
+    }
+    final home = s.homeProfileId;
+    if (!s.restoreHomeOnStart || home == null || home == s.activeProfileId) return;
+    if (repo.profileById(home) == null) return;
+    repo.updateSettings(s.copyWith(activeProfileId: home));
   }
 
   final NotesRepository repo;
@@ -26,6 +41,10 @@ class ProfileController extends ChangeNotifier {
 
   VisualProfile? _preview;
   bool _rescueOverride = false;
+
+  /// Un choix manuel l'emporte sur le mode nuit automatique jusqu'au
+  /// prochain passage jour/nuit (valeur de [isNight] au moment du choix).
+  bool? _manualNight;
   VisualProfile? _effective;
   final _palettes = Expando<ResolvedPalette>();
 
@@ -46,6 +65,28 @@ class ProfileController extends ChangeNotifier {
 
   VisualProfile get rescueProfile =>
       repo.profileById(repo.settings.rescueProfileId) ?? Presets.standard;
+
+  /// « Mon profil »: le profil préétabli de l'élève, toujours prioritaire.
+  VisualProfile get home =>
+      repo.profileById(repo.settings.homeProfileId) ?? rescueProfile;
+
+  /// Vrai quand l'élève essaie un autre affichage que le sien.
+  bool get isTrying => chosen.id != home.id;
+
+  /// Revient à « mon profil » d'un toucher.
+  Future<void> backToHome() => setActive(home.id);
+
+  /// Fait du profil [id] « mon profil ».
+  Future<void> setHome(String id) async {
+    HapticFeedback.lightImpact();
+    _manualNight = isNight;
+    await repo.updateSettings(
+        repo.settings.copyWith(homeProfileId: id, activeProfileId: id));
+    _rescueOverride = false;
+    _preview = null;
+    _recompute();
+    notifyListeners();
+  }
 
   bool get isNight {
     final s = repo.settings;
@@ -69,7 +110,9 @@ class ProfileController extends ChangeNotifier {
 
   void _recompute() {
     var p = chosen;
-    if (!_rescueOverride && isNight) {
+    final night = isNight;
+    if (_manualNight != null && _manualNight != night) _manualNight = null;
+    if (_manualNight == null && !_rescueOverride && night) {
       p = repo.profileById(repo.settings.nightProfileId) ?? p;
     }
     p = withEveningWarmth(p, eveningWarmth);
@@ -98,6 +141,7 @@ class ProfileController extends ChangeNotifier {
   /// haptique léger pour confirmer sans regarder.
   Future<void> setActive(String id) async {
     _rescueOverride = false;
+    _manualNight = isNight;
     _preview = null;
     HapticFeedback.lightImpact();
     await repo.updateSettings(repo.settings.copyWith(activeProfileId: id));

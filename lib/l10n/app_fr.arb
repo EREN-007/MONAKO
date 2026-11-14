@@ -13,7 +13,6 @@
   "name": "Nom",
   "keep": "Garder",
   "or": "ou",
-  "selected": "Sélectionné",
   "share": "Partager",
   "settings": "Réglages",
   "about": "À propos",
@@ -79,7 +78,6 @@
   "presetC": "Couleurs",
   "presetD": "Vision réduite",
   "presetE": "Flou et distorsion",
-  "profilesTitle": "Profils enregistrés",
   "visualProfiles": "Profils visuels",
   "presetProfiles": "Profils prédéfinis",
   "myProfiles": "Mes profils",
@@ -673,5 +671,55 @@
   "calWarmthTitle": "Une teinte plus chaude ?",
   "calWarmthHelp": "Réduire le bleu adoucit l’écran, surtout le soir. Glissez jusqu’à ce que ce soit confortable.",
   "calResultTitle": "Votre profil sur mesure",
-  "calResultHelp": "Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment."
+  "calResultHelp": "Voici une note dans ce profil. Vous pourrez l’ajuster à tout moment.",
+  "myProfileTitle": "Mon profil",
+  "myProfileNamed": "Mon profil : {name}",
+  "@myProfileNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "backToMyProfile": "Revenir à mon profil",
+  "inUse": "Utilisé",
+  "tryingProfile": "Vous essayez « {name} ». Votre profil reste enregistré.",
+  "@tryingProfile": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "makeItMyProfile": "En faire mon profil",
+  "tryAnotherLook": "Essayer un autre affichage",
+  "tryAnotherLookHelp": "Un toucher change tout l’affichage, en direct. Appui long : en faire mon profil.",
+  "customizeLook": "Choisir mon fond et mon encre",
+  "customizeLookHelp": "Choisissez librement : Monako ajuste la luminosité pour garder un contraste sûr.",
+  "background": "Fond",
+  "ink": "Encre",
+  "myCustomLook": "Mon affichage personnalisé",
+  "welcomeBack": "Bon retour !",
+  "welcomeBackUser": "Bon retour, {email} !",
+  "@welcomeBackUser": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeTagline": "Vos notes, dans les couleurs qui reposent vos yeux.",
+  "openMyNotes": "Ouvrir mes notes",
+  "resumeNotebook": "Reprendre « {title} »",
+  "@resumeNotebook": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "signInToSync": "Se connecter pour synchroniser",
+  "restoreHomeOnStart": "Revenir à mon profil à chaque ouverture",
+  "restoreHomeOnStartHelp": "Les essais d’autres affichages restent libres pendant la session.",
+  "showWelcomeSetting": "Afficher la page d’accueil à l’ouverture"
 }

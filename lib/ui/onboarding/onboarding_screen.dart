@@ -119,6 +119,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       onboardingDone: true,
       consentAt: nowUtc(),
       activeProfileId: chosen.id,
+      homeProfileId: chosen.id,
       rescueProfileId: rescue,
       autoNight: _time == _Time.both && chosen.id != Presets.a1Id,
       nightProfileId: Presets.a1Id,
