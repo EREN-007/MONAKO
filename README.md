@@ -224,6 +224,11 @@ test/             contraste, couleur, encre sémantique, fusion, recoloration,
 - Les PDF scannés de mauvaise qualité sans texte reconnu n'ont que le filtre de couleur ;
   les graphiques à légendes colorées peuvent perdre en sens : bouton « voir l'original ».
 
+## Licence
+
+Logiciel propriétaire — © 2026 EREN-007, tous droits réservés. Aucune réutilisation,
+copie ou redistribution sans accord écrit. Voir [`LICENSE`](LICENSE).
+
 ## Licences des ressources
 
 - Atkinson Hyperlegible © Braille Institute — SIL Open Font License (`assets/fonts/`)

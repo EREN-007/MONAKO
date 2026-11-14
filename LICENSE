@@ -1,0 +1,37 @@
+Monako — Proprietary License
+
+Copyright (c) 2026 EREN-007 (github.com/EREN-007). All rights reserved.
+
+This repository and all of its contents — including source code, database
+schema, vision-profile algorithms, colour models, designs, logos, the
+"Monako" name, documentation and media — are the exclusive property of the
+copyright holder and are confidential.
+
+No license or right is granted to any person to use, copy, modify, merge,
+publish, distribute, sublicense, sell, reverse engineer, or create derivative
+works of this software or any part of it, in whole or in part, by any means,
+without the prior written permission of the copyright holder.
+
+Access to this repository, to the live demo, or to any build of the
+application (including web builds served from a public URL) does not grant
+any license and does not constitute publication under an open-source license.
+Viewing or testing the demo is permitted solely for evaluation purposes.
+
+Any licensing, white-label, partnership or acquisition use requires a separate
+written agreement signed by the copyright holder.
+
+Third-party components bundled with this software remain under their own
+licenses, listed below and in their respective folders:
+
+- Atkinson Hyperlegible font (c) Braille Institute — SIL Open Font License 1.1
+  (assets/fonts/)
+- OpenDyslexic font — Bitstream Vera license
+  (assets/fonts/LICENSE-OpenDyslexic.txt)
+- pdf.js (c) Mozilla — Apache License 2.0 (web/pdfjs/LICENSE)
+- Flutter and Dart packages listed in pubspec.yaml — their respective licenses
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY ARISING FROM THE USE OF THE SOFTWARE.
+
+Contact for licensing: open an issue or contact the owner via github.com/EREN-007.
