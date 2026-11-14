@@ -68,4 +68,35 @@ void main() {
     expect(pc.home.id, Presets.eId);
     pc.dispose();
   });
+
+  test('le mode nuit automatique ne bloque jamais un choix manuel', () async {
+    final store = LocalStore();
+    await store.open(inMemory: true);
+    await store.clearAll();
+    final repo = NotesRepository(store, SyncService(null, store));
+    await repo.updateSettings(const UserSettings().copyWith(
+      onboardingDone: true,
+      homeProfileId: Presets.a2Id,
+      activeProfileId: Presets.a2Id,
+      autoNight: true,
+      nightProfileId: Presets.a1Id,
+    ));
+    var now = DateTime(2026, 11, 14, 21);
+    final pc = ProfileController(repo)..clock = () => now;
+    pc.preview(null); // recalcul avec l'horloge du test
+    await pc.setActive(Presets.a2Id);
+    expect(pc.profile.id, Presets.a2Id, reason: 'choix manuel le soir');
+    await pc.setActive(Presets.bId);
+    expect(pc.profile.id, Presets.bId);
+    await pc.setActive(Presets.dId);
+    expect(pc.profile.id, Presets.dId);
+
+    // Le lendemain soir, le mode nuit reprend la main.
+    now = DateTime(2026, 11, 15, 10);
+    await repo.updateSettings(repo.settings.copyWith());
+    now = DateTime(2026, 11, 15, 21);
+    await repo.updateSettings(repo.settings.copyWith());
+    expect(pc.profile.id, Presets.a1Id);
+    pc.dispose();
+  });
 }

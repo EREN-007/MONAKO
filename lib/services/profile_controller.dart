@@ -41,6 +41,10 @@ class ProfileController extends ChangeNotifier {
 
   VisualProfile? _preview;
   bool _rescueOverride = false;
+
+  /// Un choix manuel l'emporte sur le mode nuit automatique jusqu'au
+  /// prochain passage jour/nuit (valeur de [isNight] au moment du choix).
+  bool? _manualNight;
   VisualProfile? _effective;
   final _palettes = Expando<ResolvedPalette>();
 
@@ -75,6 +79,7 @@ class ProfileController extends ChangeNotifier {
   /// Fait du profil [id] « mon profil ».
   Future<void> setHome(String id) async {
     HapticFeedback.lightImpact();
+    _manualNight = isNight;
     await repo.updateSettings(
         repo.settings.copyWith(homeProfileId: id, activeProfileId: id));
     _rescueOverride = false;
@@ -105,7 +110,9 @@ class ProfileController extends ChangeNotifier {
 
   void _recompute() {
     var p = chosen;
-    if (!_rescueOverride && isNight) {
+    final night = isNight;
+    if (_manualNight != null && _manualNight != night) _manualNight = null;
+    if (_manualNight == null && !_rescueOverride && night) {
       p = repo.profileById(repo.settings.nightProfileId) ?? p;
     }
     p = withEveningWarmth(p, eveningWarmth);
@@ -134,6 +141,7 @@ class ProfileController extends ChangeNotifier {
   /// haptique léger pour confirmer sans regarder.
   Future<void> setActive(String id) async {
     _rescueOverride = false;
+    _manualNight = isNight;
     _preview = null;
     HapticFeedback.lightImpact();
     await repo.updateSettings(repo.settings.copyWith(activeProfileId: id));
